@@ -1,0 +1,33 @@
+@component('components/layouts/app')
+
+@slot('main')
+<a href="/kind/create">+ Add Kind</a>
+
+<table border="1" cellpadding="6">
+  <thead>
+
+  </thead>
+  <tbody>
+    @each(kind in kinds)
+    <tr>
+      <td>{{ kind.id_kind }}</td>
+      <td>{{ kind.kind_name }}</td>
+      <td>
+        <a href="/kind/{{kind.id_kind}}/edit">
+          <button type="button">Editer</button>
+        </a>
+      </td>
+      <td>
+        <form method="POST" action="/kind/{{ kind.id_kind }}/delete_kind?_method=DELETE" style="display:inline;">
+          {{ csrfField() }}
+          
+          <button type="submit">Supprimer</button>
+        </form>
+      </td>
+    </tr>
+    @endeach
+  </tbody>
+</table>
+@endslot
+
+@endcomponent

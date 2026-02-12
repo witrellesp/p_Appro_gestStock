@@ -1,0 +1,18 @@
+@component('components/layouts/app')
+@slot('main')
+    <h1>Edit {{kind.kind_name}}</h1>
+    <form method="POST" action="/kind/{{ kind.id_kind }}/submit_edit?_method=PUT">
+    {{ csrfField() }}
+    
+
+
+      <div>
+        <label for="kind_name">Nom: </label>
+        <input id="kind_name" type="text" name="kind_name" value="{{kind.kind_name}}"/>
+      </div>
+
+      <button type="submit">Enregistrer</button>
+    </form>
+
+@endslot
+@endcomponent

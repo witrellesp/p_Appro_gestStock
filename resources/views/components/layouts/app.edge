@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <title>Stock informatique v1.2.0 - ETML</title>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta http-equiv="Content-Language" content="fr">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="author" content="William Trelles">
+  <meta name="description" content="{{ state.description ?? '' }}">
+  <meta name="keywords" lang="fr" content="etml, intranet, gestion@if(state.keywords), {{ state.keywords }}@endif">
+  <meta name="language" content="fr">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link href="/img/favicon.png" type="image/x-icon" rel="icon">
+  <link href="/img/favicon.png" rel="shortcut icon">
+
+  <!-- CSS (copiés depuis le legacy, à placer dans /public) 
+  <link rel="stylesheet" href="/css/jquery-ui/jquery-ui.min.css">
+  <link rel="stylesheet" href="/css/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/bootstrap-datepicker/css/bootstrap-datepicker.css">
+  <link rel="stylesheet" href="/css/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/css/animate/animate.min.css">
+  <link rel="stylesheet" href="/css/datatables/datatables.css">
+
+  <link rel="stylesheet" href="/css/style.min.css">
+  <link rel="stylesheet" href="/css/style-responsive.min.css">
+-->
+  <link rel="stylesheet" href="/css/ionicons/css/ionicons.min.css">
+  <link rel="stylesheet" href="/css/bootstrap-sweetalert/animate.css">
+  <link rel="stylesheet" href="/css/crop_image/croppie.css">
+
+  <link rel="stylesheet" href="/css/default.css">
+  <link rel="stylesheet" href="/css/etml.css">
+
+
+
+  
+  @if($slots.head)
+  {{{ await $slots.head() }}}
+  @endif
+
+</head>
+
+<body>
+  
+  <!-- begin #page-loader -->
+  <div id="page-loader" class="fade show"><span class="spinner"></span></div>
+  <!-- end #page-loader -->
+
+  <!-- begin #page-container -->
+  <div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
+
+    <!-- begin #header -->
+    <div id="header" class="header navbar-inverse">
+
+      <!-- begin navbar-header -->
+      <div class="navbar-header">
+        <a href="/" class="navbar-brand">
+          <img src="/img/logo-GestStock.png" alt="logoGestStock">
+          <b class="text-orange">GestStockInf</b> <span class="font_etml">ETML</span>
+          <span class="small"> - Informatique</span>
+        </a>
+
+        <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <!-- end navbar-header -->
+
+      <!-- menu d'entête -->
+      <ul class="navbar-nav navbar-right">
+        <!-- AUTH STUB (tu lo remplazas cuando implementes auth) -->
+        @if(state.isAuthenticated)
+        <li>
+          <a href="/logout">
+            <i class="ion ion-md-log-out fa-2x fa-fw pull-left m-r-5 text-white-light"></i>
+            <span class="d-none d-md-inline">Déconnexion</span>
+          </a>
+        </li>
+        @else
+        <li class="dropdown navbar-user">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="ion ion-md-log-in fa-2x fa-fw pull-left m-r-5 text-white-light"></i>
+            <span class="d-none d-md-inline">Connexion</span> <b class="caret"></b>
+          </a>
+
+          <div class="dropdown-menu dropdown-menu-right m-t-10">
+            <!-- Por ahora no implementamos login, pero dejamos el HTML -->
+            <form id="frm-login" class="form" action="/login" method="POST">
+              <div class="card-body text-center p-0">
+                <div class="form-group m-10">
+                  <input type="text" name="login" class="form-control form-control-sm" id="login"
+                    placeholder="Identifiant">
+                  <span id="error_login" class="text-danger"></span>
+                </div>
+                <div class="form-group m-10">
+                  <input type="password" name="password" class="form-control form-control-sm" id="password"
+                    placeholder="Mot de Passe">
+                  <span id="error_password" class="text-danger"></span>
+                </div>
+
+                <button type="button" class="btn btn-sm btn-success m-r-5" onclick="loginUser()">Connection</button>
+              </div>
+            </form>
+          </div>
+        </li>
+        @endif
+      </ul>
+      <!-- fin menu d'entête -->
+
+    </div>
+    <!-- end #header -->
+
+    <!-- begin #sidebar -->
+    <div id="sidebar" class="sidebar">
+      <div data-scrollbar="true" data-height="100%">
+
+        <!-- Profil user (stub) -->
+        @if(state.isAuthenticated)
+        <ul class="nav">
+          <li class="nav-profile">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="user-pic">
+                  <img src="{{ state.userPhoto ?? '/img/no-photo.jpg' }}" alt="User picture" />
+                </div>
+              </div>
+
+              <div class="col-sm-8">
+                <div class="row f-s-14">{{ state.userId ?? '' }}</div>
+                <div class="row text-orange">{{ state.userFullName ?? '' }}</div>
+                <div class="row">
+                  <div class="col-sm-3 p-t-5">
+                    <div class="box">
+                      <div class="notifications">
+                        <i class="fa fa-bell"></i>
+                        <div id="contenu">
+                          <span id="usrNbBorrow">0</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </li>
+        </ul>
+        @endif
+
+        <!-- Navigation -->
+        <ul class="nav">
+          <li>
+            <a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify">
+              <i class="fa fa-angle-double-left"></i>
+            </a>
+          </li>
+
+          <!-- Gestion (solo admin) -->
+          @if(state.isAdministrator)
+          <li class="nav-header">Gestion</li>
+          <li>
+            <a href="/gestion">
+              <i class="fa fa-calendar"></i> <span>Entités de base</span>
+            </a>
+          </li>
+          @endif
+
+          <li class="nav-header">Emprunts</li>
+          <li>
+            <a href="/borrow">
+              <i class="fa fa-shopping-basket"></i> <span>Liste</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Menu dynamique catégories (stub por ahora) -->
+        <div id="mnuNavMateriel">
+          @if(state.menuHtml)
+          {{{ state.menuHtml }}}
+          @endif
+        </div>
+
+
+
+      </div>
+    </div>
+    <!-- end #sidebar -->
+
+    <!-- begin #content -->
+    <div id="content" class="content">
+      
+      <!-- Flash messages (stub) -->
+      @if(state.flash)
+      <div class="alert alert-{{ state.flash.type ?? 'info' }} fade in" role="alert">
+        <p class="font-weight-600">{{ state.flash.title ?? '' }}</p>
+        <ul>
+          @each(error in state.flash.messages)
+          <li class="p-l-10">{{ error }}</li>
+          @endeach
+        </ul>
+      </div>
+      @endif
+
+    
+    </div>
+    <!-- end #content -->
+
+  </div>
+  <!-- end #page-container -->
+
+  {{{ await $slots.main() }}}
+
+  <div id="footer" class="footer">
+    2026 Gestion Stock ETML informatique - William Trelles
+  </div>
+
+
+  <!-- JS (copiés depuis le legacy, à placer dans /public) -->
+  <script src="/js/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/js/jquery-ui/jquery-ui.min.js"></script>
+  <script src="/js/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <script src="/js/bootbox/bootbox.min.js"></script>
+  <script src="/js/bootstrap-sweetalert/sweetalert2.min.js"></script>
+  <script src="/js/slimscroll/jquery.slimscroll.min.js"></script>
+  <script src="/js/js-cookie/js.cookie.js"></script>
+
+  <script src="/js/datatables/datatables.min.js"></script>
+  <script src="/js/jquery-qrcode/jquery-qrcode-0.18.0.min.js"></script>
+
+  <script src="/js/default.min.js"></script>
+  <script src="/js/app.js"></script>
+
+  <script src="/js/crop_image/croppie.js"></script>
+
+  <!-- JS applicatif -->
+  <script src="/js/gestion.js"></script>
+  <script src="/js/article.js"></script>
+  <script src="/js/borrow.js"></script>
+  <script src="/js/stock.js"></script>
+
+  @if($slots.scripts)
+  {{{ await $slots.scripts() }}}
+  @endif
+
+  <script>
+    $(document).ready(function () {
+      if (typeof App !== 'undefined' && App.init) {
+        App.init();
+      }
+    });
+  </script>
+
+
+
+</body>
+
+</html>

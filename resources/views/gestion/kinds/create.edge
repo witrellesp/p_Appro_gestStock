@@ -1,0 +1,28 @@
+@component('components/layouts/app')
+@slot('main')
+     <h1>Créer un genre</h1>
+
+
+@if(flashMessages.get('error'))
+  <p style="color:red">
+    {{ flashMessages.get('error') }}
+  </p>
+@endif
+
+
+ <form method="POST" action="/kind/submit_add">
+   {{ csrfField() }}
+
+      <div>
+        <label for="kind_name">Nom: </label>
+        <input id="kind_name" type="text" name="kind_name" />
+      </div>
+
+      <button type="submit">Enregistrer</button>
+    </form>
+@end
+
+@endslot
+@endcomponent
+
+
