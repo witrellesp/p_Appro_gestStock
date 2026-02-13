@@ -1,0 +1,13 @@
+@component('components/layouts/app')
+@slot('main')
+
+  <h1>Gestion</h1>
+
+  {{-- Aquí insertas la tabla que quieras --}}
+  @include('gestion/kinds/_index')
+
+  {{-- luego podrás poner otras --}}
+  {{-- @include('gestion/categories/_table') --}}
+
+@endslot
+@endcomponent

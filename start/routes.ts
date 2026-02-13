@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import KindsController from '#controllers/kinds_controller'
+import GestionsController from '#controllers/gestions_controller'
 //const KindsController = () => import('#controllers/kinds_controller')
 
 import db from '@adonisjs/lucid/services/db'
@@ -33,16 +34,20 @@ router.get('/', async ({ view }) => {return view.render('pages/home',{
   }
 })})
 
+/* GESTION */
+router.get('/gest_tables',[GestionsController, 'index'])
+
 /* KINDS */
 // List de genres - ok
-router.get('/kind/view', [KindsController, 'index'])
+router.get('/kind/view', [GestionsController, 'kind_view'])
 // Form pour créer un genre - ok
-router.get('/kind/create', [KindsController, 'create'])
+router.get('/kind/create', [GestionsController, 'kind_add'])
 // Route qui submit la création du genre - ok
-router.post('/kind/submit_add', [KindsController, 'store'])
+router.post('/kind/submit_add', [GestionsController, 'submit_add_Kind'])
 // Form pour l'édition d'un genre
-router.get('/kind/:id/edit',[KindsController, 'edit'])
+router.get('/kind/:id/edit',[GestionsController, 'kind_edit'])
 // Route qui submit l'édition du genre
-router.put('/kind/:id/submit_edit',[KindsController, 'update'])
+router.put('/kind/:id/submit_edit',[GestionsController, 'submit_edit_Kind'])
 // Route pour delete un genre
-router.delete('/kind/:id/delete_kind',[KindsController, 'destroy'])
+router.delete('/kind/:id/delete_kind',[GestionsController, 'destroy'])
+
