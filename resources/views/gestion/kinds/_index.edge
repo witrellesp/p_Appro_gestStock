@@ -1,4 +1,8 @@
+
+  
 <a href="/kind/create">+ Add Kind</a>
+
+
 
 <table border="1" cellpadding="6">
   <thead>
@@ -21,7 +25,7 @@
     {{-- affichage de genres --}}
     @each(kind in kinds)
     <tr>
-      <td>{{ kind.id_kind }}</td>
+      
       <td>{{ kind.kind_name }}</td>
       <td>
         <a href="/kind/{{kind.id_kind}}/edit">

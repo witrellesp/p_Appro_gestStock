@@ -8,9 +8,7 @@
 */
 
 import router from '@adonisjs/core/services/router'
-import KindsController from '#controllers/kinds_controller'
-import GestionsController from '#controllers/gestions_controller'
-//const KindsController = () => import('#controllers/kinds_controller')
+const GestionsController = () => import ('#controllers/gestions_controller')
 
 import db from '@adonisjs/lucid/services/db'
 

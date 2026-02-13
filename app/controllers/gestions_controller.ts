@@ -122,8 +122,6 @@ export default class GestionsController {
             .where('fk_kind', id)
             .first()
 
-        console.log(id)
-        console.log(hasCategories)
         if (hasCategories) {
             // si le genre a des categories
             session.flash('error', 'Impossible de supprimer: des catégories utilisent ce genre.')

@@ -1,5 +1,7 @@
 @component('components/layouts/app')
 @slot('main')
+
+
     <h1>Edit {{kind.kind_name}}</h1>
     <form method="POST" action="/kind/{{ kind.id_kind }}/submit_edit?_method=PUT">
     {{ csrfField() }}

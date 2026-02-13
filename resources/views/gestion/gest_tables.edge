@@ -1,10 +1,53 @@
 @component('components/layouts/app')
 @slot('main')
 
-  <h1>Gestion</h1>
+  <div class="card" >
+	<div class="row-fluid">	
+		<div class="col text-center pt-2">
+			<h2>Entités de base</h2>
+			<p class="p-b-10">Toutes les tables nécessaires à la gestion du stock</p>
+		</div>
+	</div>
+</div>
 
-  {{-- Aquí insertas la tabla que quieras --}}
-  @include('gestion/kinds/_index')
+  {{-- TABLES  --}}
+  <div class="row">
+    <div class="col-4">
+
+      <div id="accor_kind" class="card-accordion">
+        <div class="card">
+          <div class="card-header bg-grey-light text-seondary pointer-cursor">
+          <div class="media-body">
+            <div class="row">
+
+              <div class="col-10"  data-toggle="collapse" data-target="#collapse_kind">
+                <h4 class="media-heading">Genres ou Matériels</h4>		
+                <i class="text-muted">Nombre :
+                  {{--TODO : envoyer le nombre total de kinds depuis le controller function index--}} 					
+                  <span id="nbKinds" class="text-success">{{ nbKinds }}</span>
+                </i>
+
+
+              </div>
+
+              <div class="col-12t">
+                 @include('gestion/kinds/_index')
+              </div>
+
+            </div>
+
+          </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+  </div>
+ 
 
   {{-- luego podrás poner otras --}}
   {{-- @include('gestion/categories/_table') --}}
