@@ -1,56 +1,383 @@
 @component('components/layouts/app')
 @slot('main')
 
-  <div class="card" >
-	<div class="row-fluid">	
-		<div class="col text-center pt-2">
-			<h2>Entités de base</h2>
-			<p class="p-b-10">Toutes les tables nécessaires à la gestion du stock</p>
-		</div>
-	</div>
+<div class="card">
+  <div class="row-fluid">
+    <div class="col text-center pt-2">
+      <h2>Entités de base</h2>
+      <p class="p-b-10">Toutes les tables nécessaires à la gestion du stock</p>
+    </div>
+  </div>
 </div>
 
-  {{-- TABLES  --}}
-  <div class="row">
-    <div class="col-4">
+{{-- TABLES --}}
+<div class="row">
 
-      <div id="accor_kind" class="card-accordion">
-        <div class="card">
-          <div class="card-header bg-grey-light text-seondary pointer-cursor">
+  <div class="col-4">
+
+    <div id="accor_kind" class="card-accordion">
+      <div class="card">
+
+        <div class="card-header bg-grey-light text-seondary pointer-cursor">
+
+          <div class="media-body">
+            <div class="row">
+              <div class="col-10" data-toggle="collapse" data-target="#collapse_kind">
+                <h4 class="media-heading">Genres ou Matériels</h4>
+                <i class="text-muted">Nombre :
+                  <span id="nbKinds" class="text-success">{{ nbKinds }}</span>
+                </i>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div id="collapse_kind" class="collapse show" data-parent="#accor_kind">
+
+          <div class="card-body p-5">
+
+            <section class="section-list-all-kind">
+              <div class="container-fluid">
+
+                <div class="cardbox">
+                  <div class="cardbox-heading">
+                    <div class="table-responsive bootgrid">
+
+                      <div class="overlay-all-kind"
+                        style="display:none; font-size:36px; margin:5px; text-align:center;"><i
+                          class="fas fa-sync-alt fa-spin"></i></div>
+                          
+
+                      @include('gestion/kinds/kinds_view')
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+          </div>
+        </div>
+
+
+
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="col-4">
+
+    <div id="accor_category" class="card-accordion">
+      <div class="card">
+        <div class="card-header bg-grey-light text-seondary pointer-cursor">
           <div class="media-body">
             <div class="row">
 
-              <div class="col-10"  data-toggle="collapse" data-target="#collapse_kind">
-                <h4 class="media-heading">Genres ou Matériels</h4>		
+              <div class="col-10" data-toggle="collapse" data-target="#collapse_cat">
+                <h4 class="media-heading">Catégories</h4>
                 <i class="text-muted">Nombre :
-                  {{--TODO : envoyer le nombre total de kinds depuis le controller function index--}} 					
-                  <span id="nbKinds" class="text-success">{{ nbKinds }}</span>
+
+                  <span id="nbCats" class="text-success">{{ nbCats }}</span>
+                </i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+       <div id="collapse_cat" class="collapse show" data-parent="#accor_category">
+				
+          <div class="card-body p-5">	
+
+            <!-- section: Table , liste des  catégories-->
+            <section class="section-list-all-category">
+              <div class="container-fluid">							
+
+                <div class="cardbox">
+                  <div class="cardbox-heading">
+                    <div class="table-responsive bootgrid">
+                      
+                      <div class="overlay-all-category" style="display:none; font-size:36px; margin:5px; text-align:center;"><i class="fas fa-sync-alt fa-spin"></i></div>
+                      <!-- insertion de la liste des genres voir méthode getCategory  gestion.js-->
+                      @include('gestion/categories/categories_view')
+                      
+                  
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </section>  
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-4">
+
+    <div id="accor_make" class="card-accordion">
+      <div class="card">
+        <div class="card-header bg-grey-light text-seondary pointer-cursor">
+          <div class="media-body">
+            <div class="row">
+
+              <div class="col-10" data-toggle="collapse" data-target="#collapse_make">
+                <h4 class="media-heading">Marques</h4>
+                <i class="text-muted">Nombre :
+
+                  <span id="nbMakers" class="text-success">{{ nbMakers }}</span>
                 </i>
 
 
               </div>
 
               <div class="col-12t">
-                 @include('gestion/kinds/_index')
+
               </div>
 
             </div>
 
           </div>
+        </div>
+
+
+        <div id="collapse_make" class="collapse show" data-parent="#accor_make">
+
+          <div class="card-body p-5">
+
+            <!-- section: Table , liste des  fabricants-->
+            <section class="section-list-all-make">
+              <div class="container-fluid">
+
+                <div class="cardbox">
+                  <div class="cardbox-heading">
+                    <div class="table-responsive bootgrid">
+
+                      <div class="overlay-all-make"
+                        style="display:none; font-size:36px; margin:5px; text-align:center;"><i
+                          class="fas fa-sync-alt fa-spin"></i></div>
+                      <!-- insertion de la liste des genres voir méthode getMake  gestion.js-->
+                      @include('gestion/makers/makers_view')
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+          </div>
+        </div>
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-4">
+
+    <div id="accor_room" class="card-accordion">
+      <div class="card">
+        <div class="card-header bg-grey-light text-seondary pointer-cursor">
+          <div class="media-body">
+            <div class="row">
+
+              <div class="col-10" data-toggle="collapse" data-target="#collapse_room">
+                <h4 class="media-heading">Salles de stockage</h4>
+                <i class="text-muted">Nombre :
+
+                  <span id="nbRooms" class="text-success">{{ nbRooms }}</span>
+                </i>
+
+
+              </div>
+
+
+            </div>
+
+          </div>
+        </div>
+
+
+        <div id="collapse_room" class="collapse show" data-parent="#accor_room">
+
+          <div class="card-body p-5">
+
+            <!-- section: Table , liste des  salles de stockage-->
+            <section class="section-list-all-room">
+              <div class="container-fluid">
+
+                <div class="cardbox">
+                  <div class="cardbox-heading">
+                    <div class="table-responsive bootgrid">
+
+                      <div class="overlay-all-room"
+                        style="display:none; font-size:36px; margin:5px; text-align:center;"><i
+                          class="fas fa-sync-alt fa-spin"></i></div>
+                      <!-- insertion de la liste des genres voir méthode getRoom  gestion.js-->
+                      @include('gestion/rooms/rooms_view')
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+          </div>
+        </div>
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-4">
+
+    <div id="accor_chest" class="card-accordion">
+      <div class="card">
+        <div class="card-header bg-grey-light text-seondary pointer-cursor">
+          <div class="media-body">
+            <div class="row">
+
+              <div class="col-10" data-toggle="collapse" data-target="#collapse_chest">
+                <h4 class="media-heading">Armoires de stockage</h4>
+                <i class="text-muted">Nombre :
+
+                  <span id="nbChests" class="text-success">{{ nbChests }}</span>
+                </i>
+
+
+              </div>
+
+              <div class="col-12t">
+                
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div id="collapse_chest" class="collapse show" data-parent="#accor_chest">
+				
+          <div class="card-body p-5">	
+
+            <!-- section: Table , liste des  armoires de stockage-->
+            <section class="section-list-all-chest">
+              <div class="container-fluid">							
+
+                <div class="cardbox">
+                  <div class="cardbox-heading">
+                    <div class="table-responsive bootgrid">
+                      
+                      <div class="overlay-all-chest" style="display:none; font-size:36px; margin:5px; text-align:center;"><i class="fas fa-sync-alt fa-spin"></i></div>
+                      <!-- insertion de la liste des genres voir méthode getChest  gestion.js-->
+                      @include('gestion/chests/chests_view')
+                      
+                  
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </section>  
+          </div>
+        </div>
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="col-4">
+
+    <div id="accor_users" class="card-accordion">
+      <div class="card">
+        <div class="card-header bg-grey-light text-seondary pointer-cursor">
+          <div class="media-body">
+            <div class="row">
+
+              <div class="col-10" data-toggle="collapse" data-target="#collapse_users">
+                <h4 class="media-heading">Utilisateurs</h4>
+                <i class="text-muted">Nombre :
+
+                  <span id="nbUsers" class="text-success">{{ nbUsers }}</span>
+                </i>
+
+
+
+              </div>
+
+
+              <div class="col-12t">
+                
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+
+        <div id="collapse_users" class="collapse show" data-parent="#accor_users">
+				
+          <div class="card-body p-5">	
+
+            <!-- section: Table , liste des utilisateurs-->
+            <section class="section-list-all-users">
+              <div class="container-fluid">							
+
+                <div class="cardbox">
+                  <div class="cardbox-heading">
+                    <div class="table-responsive bootgrid">
+                      
+                      <div class="overlay-all-users" style="display:none; font-size:36px; margin:5px; text-align:center;"><i class="fas fa-sync-alt fa-spin"></i></div>
+                      <!-- insertion de la liste des utilisateurs voir méthode getusers  gestion.js-->
+                      @include('gestion/users/users_view')
+                  
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </section>  
           </div>
         </div>
       </div>
-
     </div>
-
-
-
-
   </div>
- 
 
-  {{-- luego podrás poner otras --}}
-  {{-- @include('gestion/categories/_table') --}}
+
+</div>
+
+</div>
+
+
+{{-- @include('gestion/categories/_table') --}}
 
 @endslot
 @endcomponent

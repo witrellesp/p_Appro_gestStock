@@ -1,0 +1,50 @@
+<table class="table table-striped bootgrid-table table-hover" id="datatable-all-chests" aria-busy="false">
+
+  <div class="col-2  text-md-right">
+    <span><a href="/kind/create" class="text-green-darker"><i class="fas fa-plus-square fa-3x  text-center p-t-5"
+          style="line-height: 30px"></i></a></span>
+  </div>
+
+  <thead>
+    <tr>
+      <th data-column-id="kind_name">Matériel</th>
+      <th data-column-id="commands" data-sortable="false"></th>
+    </tr>
+
+  </thead>
+
+  <tbody>
+    {{-- Message d'erreur si le genre contient des categories --}}
+    @if(flashMessages.has('errorKind'))
+    <div class="alert alert-danger"> {{ flashMessages.get('errorKind') }} </div>
+    @endif
+
+    @if(flashMessages.has('successKind'))
+    <div class="alert alert-success"> {{ flashMessages.get('successKind') }} </div>
+    @endif
+
+
+    @each(kind in kinds)
+    <tr class="gradeX p-5">
+
+      <td class="text-left">{{ kind.name }}</td>
+
+      <td class="text-md-right p-5">
+
+        <a href="/kind/{{kind.id}}/edit"> 
+        <button type="button" class="fas fa-edit  f-s-15 text-center p-r-5" style="border:none"></button>
+        </a>
+
+        {{-- le _method nous permet d'envoyer une requete DELETE --}}
+        <form method="POST" action="/kind/{{ kind.id }}/delete_kind?_method=DELETE" style="display:inline;">
+          {{ csrfField() }}
+
+          <button type="submit" class="fas fa-trash-alt f-s-15 text-center" style="border:none"></button>
+        </form>
+
+
+      </td>
+    </tr>
+    @endeach
+  </tbody>
+</table>

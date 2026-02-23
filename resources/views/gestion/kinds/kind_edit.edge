@@ -2,15 +2,15 @@
 @slot('main')
 
 
-    <h1>Edit {{kind.kind_name}}</h1>
-    <form method="POST" action="/kind/{{ kind.id_kind }}/submit_edit?_method=PUT">
+    <h1>Edit {{kind.name}}</h1>
+    <form method="POST" action="/kind/{{ kind.id }}/submit_edit?_method=PUT">
     {{ csrfField() }}
     
 
 
       <div>
         <label for="kind_name">Nom: </label>
-        <input id="kind_name" type="text" name="kind_name" value="{{kind.kind_name}}"/>
+        <input id="kind_name" type="text" name="kind_name" value="{{kind.name}}"/>
       </div>
 
       <button type="submit">Enregistrer</button>

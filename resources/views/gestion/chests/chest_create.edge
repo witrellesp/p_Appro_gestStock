@@ -1,0 +1,34 @@
+@component('components/layouts/app')
+@slot('main')
+<h1> Ajout d'une armoire de stockage </h1>
+
+
+@if(flashMessages.get('error'))
+<p style="color:red">
+    {{ flashMessages.get('error') }}
+</p>
+@endif
+
+<form method="POST" action="/chest/submit_add">
+    {{ csrfField() }}
+
+
+    {{--il faut chosisir une salle auquelle l'armoire apartiendra--}}
+    <select name="fk_room" required>
+        <option value="">-- Choisisez une salle --</option>
+        @each(r in rooms)
+        <option value="{{ r.id }}">{{ r.name }}</option>
+        @endeach
+    </select>
+
+    <div>
+        <label for="ches_name">Nom: </label>
+        <input id="ches_name" type="text" name="ches_name" />
+    </div>
+
+    <button type="submit">Enregistrer</button>
+</form>
+
+
+@endslot
+@endcomponent

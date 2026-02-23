@@ -1,0 +1,55 @@
+<table class="table table-striped bootgrid-table" id="datatable-all-borrows" aria-busy="false">
+	<thead>
+		<tr>
+			<th data-column-id="kind_name">Matériel</th>
+            <th data-column-id="cate_name">Catégorie</th>
+            <th data-column-id="prod_name">Produit</th>
+			<th data-column-id="arti_label">Identifiant</th>
+			<th data-column-id="borr_owner">Qui</th>
+			<th data-column-id="borr_forwho">Pour</th>
+			<th data-column-id="borr_location">Où</th>
+			<th data-column-id="borr_stockage">Stockage</th>
+			<th data-column-id="borr_taken_date">Emprunté le</th>
+
+			<th data-column-id="commands"  data-sortable="false"></th>
+
+		</tr>
+	</thead>
+
+	<tbody>
+		
+		
+		@each(b in borrowsView)
+		
+		
+
+			<tr class="gradeX">
+				<td class="text-left">{{ b.kindName }}</td>
+				<td class="text-left"><?= $borrow->cate_name()  ?></td>
+				<td class="text-left"><?= $borrow->prod_name() ?></td>
+				<td class="text-left">
+					<a href="#"  data-toggle="modal" onclick="setArticleView(<?= $borrow->id_arti() ?>)">
+						<h5 class="widget-list-title text-orange-darker"><?= $borrow->arti_label() ?></h5>
+					</a>
+				</td>
+				<td class="text-left"><?= $borrow->user_firstname()." ".$borrow->user_name() ?></td>
+				<td class="text-left"><?= $borrow->borr_forwho() ?></td>
+				<td class="text-left"><?= $borrow->borr_location() ?></td>
+				<td class="text-left"><?= $borrow->room_name()." / ". $borrow->ches_name() ?></td>
+				<td class="text-left"><?= date_format(date_create($borrow->borr_taken_date()),"d-m-Y") ?></td>
+				<td class="text-md-right">
+				
+					<button type="button" class="btn btn-xs btn-info" 
+							onclick="setModBorrow('<?php echo $user->getAttribute('user')->id_user(); ?>',1,'<?php echo $borrow->id_borr() ?>','<?php echo $borrow->id_arti(); ?>')">
+							<i class="fas fa-sign-in-alt fa-rotate-90 text-center "></i>
+					</button>				
+				</td>
+			</tr>
+
+		
+		@endeach
+		      
+	</tbody>
+		
+	
+</table>

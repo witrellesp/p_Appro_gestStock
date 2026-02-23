@@ -7,8 +7,8 @@
  */
 
 
-$("input[type=file]").change(function(){
-	alert($(this).val());
+$("input[type=file]").change(function () {
+    alert($(this).val());
 });
 
 // affiche l'alert pour une durée 
@@ -19,151 +19,156 @@ $(".alert").show("slow").delay(5000).hide("slow");
  */
 function loginUser_b() {
 
-	/* On vérifie que les données soient bien renseignées */
-	var strMsgErreur=formLoginDataValidate();
+    /* On vérifie que les données soient bien renseignées */
+    var strMsgErreur = formLoginDataValidate();
 
-	/* si il y a une erreur on ne fait rien .. on reste sur la popup */
-	if (!(strMsgErreur=="")) {
-		return;
-	}
+    /* si il y a une erreur on ne fait rien .. on reste sur la popup */
+    if (!(strMsgErreur == "")) {
+        return;
+    }
 
-		var oForm = $("#frm-login");
-		
-		$.ajax({
-			type: "POST",
-			url: "/login",
-			data: oForm.serialize(),
-			success: function(data){
+    var oForm = $("#frm-login");
 
-				const Toast = Swal.mixin({
-					toast: true,
-					position: 'top-end',
-					showConfirmButton: false,
-					timer: 2000
-				  });
-                  
-                  // on vérifie qu'il n'y a pas d'erreurs
-                    if ((!data.msgErr == ''))
-                    {
-                        Swal.fire(data.msgTitle, data.msgErr, 'error');
-                        
-                        return;
+    $.ajax({
+        type: "POST",
+        url: "/login",
+        data: oForm.serialize(),
+        success: function (data) {
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000
+            });
+
+            // on vérifie qu'il n'y a pas d'erreurs
+            if ((!data.msgErr == '')) {
+                Swal.fire(data.msgTitle, data.msgErr, 'error');
+
+                return;
+            }
+            else {
+
+                Toast.fire({
+                    type: 'success',
+                    title: 'Connection réussi',
+                    onBeforeOpen: () => {
+                        formLoginDataReset();
+                    },
+                    onClose: () => {
+
+
                     }
-                    else{
-                        
-                        Toast.fire({
-                            type: 'success',
-                            title: 'Connection réussi',
-                            onBeforeOpen: () => {
-                                formLoginDataReset();
-                              },
-                            onClose: () => {
-        
-                                
-                              }
-                            }).then((result) => {
-                              if (
-                                // Read more about handling dismissals
-                                result.dismiss === Swal.DismissReason.timer
-                              ) {
-                                
-                                window.location.replace(data);
-                              }
-                          });
-        
-                        
-                    }				
+                }).then((result) => {
+                    if (
+                        // Read more about handling dismissals
+                        result.dismiss === Swal.DismissReason.timer
+                    ) {
 
-				  
+                        window.location.replace(data);
+                    }
+                });
 
-				// on efface le contenu des  champs du popup
-				//formLoginDataReset();
 
-				//window.location.replace(data);
+            }
 
-			},
 
-			error: function(){
-				Swal.fire({
-  					customClass: 'zoomIn',
-					titleText: "ERREUR",
-					type: "error",
-					html: "<div class='alert alert-danger'><strong>Survenue dans  loginUser :</strong> module etml.js</div>",		
-					showConfirmButton:	true,
-					confirmButtonColor: '#6c757d',
-					confirmButtonText: "Fermer"
-				  });
 
-				
-			}
-		});
+            // on efface le contenu des  champs du popup
+            //formLoginDataReset();
+
+            //window.location.replace(data);
+
+        },
+
+        error: function () {
+            Swal.fire({
+                customClass: 'zoomIn',
+                titleText: "ERREUR",
+                type: "error",
+                html: "<div class='alert alert-danger'><strong>Survenue dans  loginUser :</strong> module etml.js</div>",
+                showConfirmButton: true,
+                confirmButtonColor: '#6c757d',
+                confirmButtonText: "Fermer"
+            });
+
+
+        }
+    });
 
 }
 
 function loginUser() {
 
-	/* On vérifie que les données soient bien renseignées */
-	var strMsgErreur=formLoginDataValidate();
+    /* On vérifie que les données soient bien renseignées */
+    var strMsgErreur = formLoginDataValidate();
 
-	/* si il y a une erreur on ne fait rien .. on reste sur la popup */
-	if (!(strMsgErreur=="")) {
-		return;
-	}
+    /* si il y a une erreur on ne fait rien .. on reste sur la popup */
+    if (!(strMsgErreur == "")) {
+        return;
+    }
 
-        var oForm = $("#frm-login");
-        
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2000
-          });
-          
-        
-        $.ajax({
-            type:"POST",
-            url: "/login",
-			data: oForm.serialize(),
-        }).done(function(data){
-    
-            // on vérifie qu'il n'y a pas d'erreurs
-            if ((!data.msgErr == ''))
-                {
-                    Swal.fire(data.msgTitle, data.msgErr, 'error');
-                    
-                    return;
+    var oForm = $("#frm-login");
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000
+    });
+
+    const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute('content');
+
+
+    $.ajax({
+        type: "POST",
+        url: "/login",
+        data: oForm.serialize(),
+        headers:{
+            'x-csrf-token': csrfToken
+        }
+    }).done(function (data) {
+
+        // on vérifie qu'il n'y a pas d'erreurs
+        if ((!data.msgErr == '')) {
+            Swal.fire(data.msgTitle, data.msgErr, 'error');
+
+            return;
+        }
+        else {
+
+
+
+            Toast.fire({
+                type: 'success',
+                title: 'Connection réussi',
+                onBeforeOpen: () => {
+                    formLoginDataReset();
+                },
+                onClose: () => {
+
+
                 }
-                else{
-                    
-                    
-                    
-                    Toast.fire({
-                        type: 'success',
-                        title: 'Connection réussi',
-                        onBeforeOpen: () => {
-                            formLoginDataReset();
-                          },
-                        onClose: () => {
-    
-                            
-                          }
-                        }).then((result) => {
-                          if (
-                            // Read more about handling dismissals
-                            result.dismiss === Swal.DismissReason.timer
-                          ) {
-                            
-                            window.location.replace(data);
-                          }
-                      });
-                    
-                }				
-            
-        }).fail(function (jqXHR, textStatus) {
-            Swal.fire("ERREUR! lors de la connection !", 'error');
-    });  
+            }).then((result) => {
+                if (
+                    // Read more about handling dismissals
+                    result.dismiss === Swal.DismissReason.timer
+                ) {
 
-		
+                    window.location.replace(data);
+                }
+            });
+
+        }
+
+    }).fail(function (jqXHR, textStatus) {
+        Swal.fire("ERREUR! lors de la connection !", 'error');
+    });
+
+
 
 }
 /**
@@ -172,37 +177,34 @@ function loginUser() {
 function formLoginDataValidate() {
 
 
-	event.preventDefault();
-	var error_Msg = '';
-	
-	if($('#login').val() == '')
-	{
-		error_Msg = 'Le champ est obligatoire';
-		$('#error_login').text(error_Msg);
-		$('#login').css('border-color', '#cc0000');
-	}
-	else
-	{
-		error_Msg = '';
-		$('#error_login').text('');
-		$('#login').css('border-color', '');
-	}
+    event.preventDefault();
+    var error_Msg = '';
 
-	if ($("#password").val()=="" ) {
+    if ($('#login').val() == '') {
+        error_Msg = 'Le champ est obligatoire';
+        $('#error_login').text(error_Msg);
+        $('#login').css('border-color', '#cc0000');
+    }
+    else {
+        error_Msg = '';
+        $('#error_login').text('');
+        $('#login').css('border-color', '');
+    }
 
-		error_Msg = 'Le champ est obligatoire';
-		$('#error_password').text(error_Msg);
-		$('#password').css('border-color', '#cc0000');
-	}
-	else
-	{
-		error_Msg = '';
-		$('#error_password').text('');
-		$('#password').css('border-color', '');
-	}
-	
+    if ($("#password").val() == "") {
 
-	return error_Msg;
+        error_Msg = 'Le champ est obligatoire';
+        $('#error_password').text(error_Msg);
+        $('#password').css('border-color', '#cc0000');
+    }
+    else {
+        error_Msg = '';
+        $('#error_password').text('');
+        $('#password').css('border-color', '');
+    }
+
+
+    return error_Msg;
 
 } //formLoginDataValidate
 
@@ -210,18 +212,18 @@ function formLoginDataValidate() {
 * Réinitialise les élèments de la
 *
 */
-function formLoginDataReset(){
+function formLoginDataReset() {
 
-	// on efface le contenu des  champs de la  popup
-	$("#login").val("");
-	$("#password").val("");
+    // on efface le contenu des  champs de la  popup
+    $("#login").val("");
+    $("#password").val("");
 
-	// supprime les messages d'ereurs
-	$('#error_login').text('');
-	$('#login').css('border-color', '');
-	
-	$('#error_password').text('');
-	$('#password').css('border-color', '');
+    // supprime les messages d'ereurs
+    $('#error_login').text('');
+    $('#login').css('border-color', '');
+
+    $('#error_password').text('');
+    $('#password').css('border-color', '');
 
 } //formLoginDataReset
 
@@ -231,11 +233,11 @@ function formLoginDataReset(){
 /* ------------------------------------------------------------------- */
 function datatablesSearchRefresh(idTableToRefrech) {
 
-    if (!$.fn.dataTable) return;       
+    if (!$.fn.dataTable) return;
 
     // Filter
     $(idTableToRefrech).DataTable({
-        
+
         'paging': true, // Table pagination
         'ordering': true, // Column ordering
         'colReorder': true,
@@ -252,61 +254,66 @@ function datatablesSearchRefresh(idTableToRefrech) {
         //"sLengthMenu":     "Afficher&nbsp;  _MENU_ &eacute;l&eacute;ments &nbsp;",
         //"sPrevious":   "Pr&eacute;c&eacute;dent",
         //"sNext":       "Suivant",
-        oLanguage: {"sProcessing":     "Traitement en cours...",
-            "sSearch":         "Rech. ",
-            "sLengthMenu":     "Afficher&nbsp;  _MENU_ lignes &nbsp;",
-            "sInfo":           " _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-            "sInfoEmpty":      " 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
-            "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-            "sInfoPostFix":    "",
+        oLanguage: {
+            "sProcessing": "Traitement en cours...",
+            "sSearch": "Rech. ",
+            "sLengthMenu": "Afficher&nbsp;  _MENU_ lignes &nbsp;",
+            "sInfo": " _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+            "sInfoEmpty": " 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
+            "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+            "sInfoPostFix": "",
             "sLoadingRecords": "Chargement en cours...",
-            "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-            "sEmptyTable":     "Aucune donn&eacute;e disponible dans le tableau",
+            "sZeroRecords": "Aucun &eacute;l&eacute;ment &agrave; afficher",
+            "sEmptyTable": "Aucune donn&eacute;e disponible dans le tableau",
             "oPaginate": {
-                "sFirst":      "Premier",
-                "sPrevious":   "<<",
-                "sNext":       ">>",
-                "sLast":       "Dernier"
+                "sFirst": "Premier",
+                "sPrevious": "<<",
+                "sNext": ">>",
+                "sLast": "Dernier"
             },
             "oAria": {
-                "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
+                "sSortAscending": ": activer pour trier la colonne par ordre croissant",
                 "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
             },
             "select": {
-                    "rows": {
-                        _: " %d lignes séléctionnées",
-                        0: " Aucune ligne séléctionnée",
-                        1: " 1 ligne séléctionnée"
-                    } 
+                "rows": {
+                    _: " %d lignes séléctionnées",
+                    0: " Aucune ligne séléctionnée",
+                    1: " 1 ligne séléctionnée"
+                }
             },
             "buttons": {
                 "colvis": "Visibilité colonnes"
             }
         },
         "iDisplayLength": 5,
-        "lengthMenu": [[5, 10, 15, 20, 25, -1], [5,10,15,20,25,"Tous"]],
+        "lengthMenu": [[5, 10, 15, 20, 25, -1], [5, 10, 15, 20, 25, "Tous"]],
         // Datatable Buttons setup
         dom: 'ltBfrtip',
         buttons: [
             //{ extend: 'copy', className: 'btn-info' },
             //{ extend: 'csv', className: 'btn-info' },
-            { extend: 'excel', 
-                className: 'btn-info', 
-                text: "XLS", 
+            {
+                extend: 'excel',
+                className: 'btn-info',
+                text: "XLS",
                 title: 'XLS-File',
                 exportOptions: {
-                    columns: ':visible'} 
-                },
-            { extend: 'pdf',     
-                orientation:'landscape', 
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'pdf',
+                orientation: 'landscape',
                 exportOptions: {
                     columns: ':visible'
-                },          
-                className: 'btn-info', 
-                title: $('title').text()},
-                'colvis',
+                },
+                className: 'btn-info',
+                title: $('title').text()
+            },
+            'colvis',
         ],
-});
+    });
 
 }
 
@@ -316,169 +323,170 @@ function datatablesSearchRefresh(idTableToRefrech) {
  */
 function datatablesRefresh(idTableToRefrech) {
 
-    if (!$.fn.dataTable) return;       
+    if (!$.fn.dataTable) return;
 
     // Filter
     $(idTableToRefrech).DataTable({
         initComplete: function () {
-            this.api().columns().every( function () {
+            this.api().columns().every(function () {
                 var column = this;
                 var select = $('<select><option value=""></option></select>')
-                    .appendTo( $(column.footer()).empty() )
-                    .on( 'change', function () {
+                    .appendTo($(column.footer()).empty())
+                    .on('change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
                         );
 
                         column
-                            .search( val ? '^'+val+'$' : '', true, false )
+                            .search(val ? '^' + val + '$' : '', true, false)
                             .draw();
-                    } );
+                    });
 
-                column.data().unique().sort().each( function ( d, j ) {
-                    select.append( '<option value="'+d+'">'+d+'</option>' )
-                } );
-            } );
+                column.data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
         },
-            'paging': true, // Table pagination
-            'ordering': true, // Column ordering
-            'info': true, // Bottom left status text
-            "rowHeight": "auto",
-            // Text translation options
-            // Note the required keywords between underscores (e.g _MENU_)
-            // Affichage de l'&eacute;l&eacute;ment  pour élément
-            // "sSearch":         "Rechercher&nbsp;:",
-            //"sLengthMenu":     "Afficher&nbsp;  _MENU_ &eacute;l&eacute;ments &nbsp;",
-            //"sPrevious":   "Pr&eacute;c&eacute;dent",
-            //"sNext":       "Suivant",
-            oLanguage: {"sProcessing":     "Traitement en cours...",
-                "sSearch":         "Rech. ",
-                "sLengthMenu":     "Afficher&nbsp;  _MENU_ lignes &nbsp;",
-                "sInfo":           " _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-                "sInfoEmpty":      " 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
-                "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                "sInfoPostFix":    "",
-                "sLoadingRecords": "Chargement en cours...",
-                "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-                "sEmptyTable":     "Aucune donn&eacute;e disponible dans le tableau",
-                "oPaginate": {
-                    "sFirst":      "Premier",
-                    "sPrevious":   "<<",
-                    "sNext":       ">>",
-                    "sLast":       "Dernier"
-                },
-                "oAria": {
-                    "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
-                    "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
-                },
-                "select": {
-                        "rows": {
-                            _: " %d lignes séléctionnées",
-                            0: " Aucune ligne séléctionnée",
-                            1: " 1 ligne séléctionnée"
-                        } 
-                }
+        'paging': true, // Table pagination
+        'ordering': true, // Column ordering
+        'info': true, // Bottom left status text
+        "rowHeight": "auto",
+        // Text translation options
+        // Note the required keywords between underscores (e.g _MENU_)
+        // Affichage de l'&eacute;l&eacute;ment  pour élément
+        // "sSearch":         "Rechercher&nbsp;:",
+        //"sLengthMenu":     "Afficher&nbsp;  _MENU_ &eacute;l&eacute;ments &nbsp;",
+        //"sPrevious":   "Pr&eacute;c&eacute;dent",
+        //"sNext":       "Suivant",
+        oLanguage: {
+            "sProcessing": "Traitement en cours...",
+            "sSearch": "Rech. ",
+            "sLengthMenu": "Afficher&nbsp;  _MENU_ lignes &nbsp;",
+            "sInfo": " _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+            "sInfoEmpty": " 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
+            "sInfoFiltered": "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+            "sInfoPostFix": "",
+            "sLoadingRecords": "Chargement en cours...",
+            "sZeroRecords": "Aucun &eacute;l&eacute;ment &agrave; afficher",
+            "sEmptyTable": "Aucune donn&eacute;e disponible dans le tableau",
+            "oPaginate": {
+                "sFirst": "Premier",
+                "sPrevious": "<<",
+                "sNext": ">>",
+                "sLast": "Dernier"
             },
-            "iDisplayLength": 5,
-            "lengthMenu": [[5, 10, 15, 20, 25, -1], [5,10,15,20,25,"Tous"]],
-            // Datatable Buttons setup
-            dom: 'ltBfrtip',
-            buttons: [
-                //{ extend: 'copy', className: 'btn-info' },
-                //{ extend: 'csv', className: 'btn-info' },
-                { extend: 'excel', className: 'btn-info', text: "XLS", title: 'XLS-File' },
-                { extend: 'pdf', className: 'btn-info', title: $('title').text() }
-            ],
+            "oAria": {
+                "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+                "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
+            },
+            "select": {
+                "rows": {
+                    _: " %d lignes séléctionnées",
+                    0: " Aucune ligne séléctionnée",
+                    1: " 1 ligne séléctionnée"
+                }
+            }
+        },
+        "iDisplayLength": 5,
+        "lengthMenu": [[5, 10, 15, 20, 25, -1], [5, 10, 15, 20, 25, "Tous"]],
+        // Datatable Buttons setup
+        dom: 'ltBfrtip',
+        buttons: [
+            //{ extend: 'copy', className: 'btn-info' },
+            //{ extend: 'csv', className: 'btn-info' },
+            { extend: 'excel', className: 'btn-info', text: "XLS", title: 'XLS-File' },
+            { extend: 'pdf', className: 'btn-info', title: $('title').text() }
+        ],
     });
-    
+
 }
 
 // pour la manipulation du qrCode
 function updateQrC() {
-	updateGui();
-	updateQrCode();
+    updateGui();
+    updateQrCode();
 }
-    var guiValuePairs = [
-        ['qrSize', 'px'],
-        ['minversion', ''],
-        ['quiet', ' modules'],
-        ['radius', '%'],
-        ['msize', '%'],
-        ['mposx', '%'],
-        ['mposy', '%']
-    ];
+var guiValuePairs = [
+    ['qrSize', 'px'],
+    ['minversion', ''],
+    ['quiet', ' modules'],
+    ['radius', '%'],
+    ['msize', '%'],
+    ['mposx', '%'],
+    ['mposy', '%']
+];
 
-    function updateGui() {
-        $.each(guiValuePairs, function (idx, pair) {
-            var $label = $('label[for="' + pair[0] + '"]');
-            $label.text($label.text().replace(/:.*/, ': ' + $('#' + pair[0]).val() + pair[1]));
-        });
-    }
+function updateGui() {
+    $.each(guiValuePairs, function (idx, pair) {
+        var $label = $('label[for="' + pair[0] + '"]');
+        $label.text($label.text().replace(/:.*/, ': ' + $('#' + pair[0]).val() + pair[1]));
+    });
+}
 
-    function updateQrCode() {
-		
-		var options2 = {
-            render: $('#render').val(),
-            ecLevel: $('#eclevel').val(),
-            minVersion: parseInt($('#minversion').val(), 10),
+function updateQrCode() {
 
-            fill: $('#qrFill').val(),
-            background: $('#qrBackground').val(),
+    var options2 = {
+        render: $('#render').val(),
+        ecLevel: $('#eclevel').val(),
+        minVersion: parseInt($('#minversion').val(), 10),
 
-            text: $('#qrcodeValue').val(),
-            size: parseInt($('#qrSize').val(), 10),
-            radius: parseInt($('#radius').val(), 10) * 0.01,
-            quiet: parseInt($('#quiet').val(), 10),
+        fill: $('#qrFill').val(),
+        background: $('#qrBackground').val(),
 
-            mode: parseInt($('#mode').val(), 10),
+        text: $('#qrcodeValue').val(),
+        size: parseInt($('#qrSize').val(), 10),
+        radius: parseInt($('#radius').val(), 10) * 0.01,
+        quiet: parseInt($('#quiet').val(), 10),
 
-            mSize: parseInt($('#msize').val(), 10) * 0.01,
-            mPosX: parseInt($('#mposx').val(), 10) * 0.01,
-            mPosY: parseInt($('#mposy').val(), 10) * 0.01,
+        mode: parseInt($('#mode').val(), 10),
 
-            label: $('#qrLabel').val(),
-            //$('#font').val()
-            fontname: "Ubuntu Mono" ,
-            fontcolor: $('#qrFontcolor').val(),
+        mSize: parseInt($('#msize').val(), 10) * 0.01,
+        mPosX: parseInt($('#mposx').val(), 10) * 0.01,
+        mPosY: parseInt($('#mposy').val(), 10) * 0.01,
 
-            image: $('#img-buffer')[0]
-		};
-		
-		var options = {
-            render: $('#render').val(),
-            ecLevel: $('#eclevel').val(),
-			text: $('#qrcodeValue').val(),
+        label: $('#qrLabel').val(),
+        //$('#font').val()
+        fontname: "Ubuntu Mono",
+        fontcolor: $('#qrFontcolor').val(),
 
-            fill: $('#qrFill').val(),
-            background: $('#qrBackground').val(),
-            
-            size: parseInt($('#qrSize').val(), 10),
-            
-            label: $('#qrLabel').val(),
-            fontname: $('#font').val(),
-            fontcolor: $('#qrFontcolor').val()
+        image: $('#img-buffer')[0]
+    };
 
-        };
+    var options = {
+        render: $('#render').val(),
+        ecLevel: $('#eclevel').val(),
+        text: $('#qrcodeValue').val(),
 
-        $('#artQrCode').empty().qrcode(options2);
-    }
+        fill: $('#qrFill').val(),
+        background: $('#qrBackground').val(),
 
-    function printBloc(idBloc){
-        var printBlock = $(this).parents(idBloc).siblings(idBloc);
-        printBlock.hide();
-        window.print();
-        printBlock.show();
-    }
+        size: parseInt($('#qrSize').val(), 10),
+
+        label: $('#qrLabel').val(),
+        fontname: $('#font').val(),
+        fontcolor: $('#qrFontcolor').val()
+
+    };
+
+    $('#artQrCode').empty().qrcode(options2);
+}
+
+function printBloc(idBloc) {
+    var printBlock = $(this).parents(idBloc).siblings(idBloc);
+    printBlock.hide();
+    window.print();
+    printBlock.show();
+}
 
 
 //User picture
 var $uploadCrop,
-tempFilename,
-rawImg,
-imageId;
+    tempFilename,
+    rawImg,
+    imageId;
 
-var getFilename=function(elm,oSize=2){
-	imageId = $(elm).data('id'); 
+var getFilename = function (elm, oSize = 2) {
+    imageId = $(elm).data('id');
     tempFilename = $(elm).val();
     // 
     $('#cancelCropBtn').data('id', imageId);
@@ -486,21 +494,21 @@ var getFilename=function(elm,oSize=2){
         $uploadCrop.croppie('destroy');
     }
     setUploadCrop(oSize);
-    readCropPhotoFile(elm); 
+    readCropPhotoFile(elm);
 };
 
-var readCropPhotoFile =function(input) {
+var readCropPhotoFile = function (input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function (e) {
-            
+
             $('.upload-crop-photo').addClass('ready');
             $('#cropImage').modal('show');
             rawImg = e.target.result;
-            
+
             bindCropImage();
             $("#gestion-modal").modal('hide');
-           
+
         }
         reader.readAsDataURL(input.files[0]);
     }
@@ -510,36 +518,36 @@ var readCropPhotoFile =function(input) {
 };
 
 
-var setUploadCrop=function(oSize){
+var setUploadCrop = function (oSize) {
 
-    var viewWidth=200;
-    var viewHeight=150;
+    var viewWidth = 200;
+    var viewHeight = 150;
 
-    var boundWidth=300;
-    var boundHeight=250;
+    var boundWidth = 300;
+    var boundHeight = 250;
 
-    switch(oSize) {
+    switch (oSize) {
         case 1:  /* mode portrait */
-        var viewWidth=180;
-        var viewHeight=240;
+            var viewWidth = 180;
+            var viewHeight = 240;
 
-        var boundWidth=270;
-        var boundHeight=330;
-          break;
+            var boundWidth = 270;
+            var boundHeight = 330;
+            break;
         case 2: /* mode paysage */
-            var viewWidth=200;
-            var viewHeight=150;
-        
-            var boundWidth=300;
-            var boundHeight=250;
-          break;
+            var viewWidth = 200;
+            var viewHeight = 150;
+
+            var boundWidth = 300;
+            var boundHeight = 250;
+            break;
         default: /* mode paysage */
-            var viewWidth=200;
-            var viewHeight=150;
-        
-            var boundWidth=300;
-            var boundHeight=250;
-      }
+            var viewWidth = 200;
+            var viewHeight = 150;
+
+            var boundWidth = 300;
+            var boundHeight = 250;
+    }
 
     $uploadCrop = $('#upload-crop-photo').croppie({
         viewport: {
@@ -556,19 +564,19 @@ var setUploadCrop=function(oSize){
     });
 };
 
-var bindCropImage=function(){
+var bindCropImage = function () {
     $uploadCrop.croppie('bind', {
         url: rawImg
-    }).then(function(){
+    }).then(function () {
         console.log('jQuery bind complete');
     });
 };
 
-var cropImgBtn=function(){
+var cropImgBtn = function () {
     /* size: {width: 150, height: 200} */
     $uploadCrop.croppie('result', {
         type: 'base64',
-        format: 'png'       
+        format: 'png'
     }).then(function (resp) {
         $('#item-img-output').attr('src', resp);
         $('#cropImage').modal('hide');
@@ -576,17 +584,17 @@ var cropImgBtn=function(){
     });
 };
 
-var CancelcropImgBtn=function(){
+var CancelcropImgBtn = function () {
     /* $uploadCrop.destroy(); */
     $uploadCrop.croppie('destroy');
     $('#cropImage').modal('hide');
     $("#gestion-modal").modal('show');
 };
 
-var rotCropImg=function(elm){
+var rotCropImg = function (elm) {
     $uploadCrop.croppie('rotate', parseInt($(elm).data('deg')));
 };
 
-	
+
 
 

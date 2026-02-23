@@ -1,0 +1,30 @@
+@component('components/layouts/app')
+@slot('main')
+
+
+<h1>Edit {{user.name}}</h1>
+<form method="POST" action="/user/{{ user.id }}/submit_edit?_method=PUT">
+  {{ csrfField() }}
+
+
+      <div>
+        <label for="user_id">ID: </label>
+        <input id="user_id" type="text" name="user_id" value="{{user.id}}"/>
+      </div>
+
+
+  <div>
+    <label for="user_firstname">Prénom: </label>
+    <input id="user_firstname" type="text" name="user_firstname" value="{{user.firstname}}" />
+  </div>
+
+  <div>
+    <label for="user_name">Nom: </label>
+    <input id="user_name" type="text" name="user_name" value="{{user.name}}" />
+  </div>
+
+  <button type="submit">Enregistrer</button>
+</form>
+
+@endslot
+@endcomponent

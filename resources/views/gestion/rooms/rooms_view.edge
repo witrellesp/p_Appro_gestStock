@@ -1,0 +1,47 @@
+<table class="table table-striped bootgrid-table table-hover" id="datatable-all-chests" aria-busy="false">
+
+  <div class="col-2  text-md-right">
+    <span><a href="/room/add" class="text-green-darker"><i class="fas fa-plus-square fa-3x  text-center p-t-5"
+          style="line-height: 30px"></i></a></span>
+  </div>
+  <thead>
+    <tr>
+      <th>Salle de stockage</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{-- Message d'erreur si le genre contient des categories --}}
+    @if(flashMessages.has('errorRoom'))
+    <div class="alert alert-danger">
+      {{ flashMessages.get('errorRoom') }}
+    </div>
+    @endif
+
+    @if(flashMessages.has('successRoom'))
+    <div class="alert alert-success">
+      {{ flashMessages.get('successRoom') }}
+    </div>
+    @endif
+
+    {{-- affichage de rooms --}}
+
+    @each(r in rooms)
+    <tr>
+
+      <td>{{ r.name }}</td>
+      <td class="text-md-right p-5">
+        <a href="/room/{{r.id}}/edit">
+          <button type="button" class="fas fa-edit  f-s-15 text-center p-r-5" style="border:none"></button>
+        </a>
+
+        {{-- le _method nous permet d'envoyer une requete DELETE --}}
+        <form method="POST" action="/room/{{ r.id }}/delete_room?_method=DELETE" style="display:inline;">
+          {{ csrfField() }}
+
+          <button type="submit" class="fas fa-trash-alt f-s-15 text-center" style="border:none"></button>
+        </form>
+      </td>
+    </tr>
+    @endeach
+  </tbody>
+</table>

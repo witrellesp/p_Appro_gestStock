@@ -1,0 +1,71 @@
+
+@component('components/layouts/app')
+@slot('main')
+
+<div class="card" >
+	<div class="row-fluid">	
+		<div class="col text-center pt-2">
+			<h2>Liste des emprunts</h2>
+			<p class="p-b-10">Tous les articles en dehors du stock</p>
+		</div>
+	</div>
+</div>
+
+@if(appState.isAuthenticated)
+
+    	<!-- begin #accordion my borrow-->
+	<div id="accordion_my" class="card-accordion">
+		<!-- begin card -->
+		<div class="card">
+			
+			<div class="card-header bg-grey-light text-seondary pointer-cursor" style="height: 6rem;"
+					data-toggle="collapse" 
+					data-target="#collapse_my">						  
+					
+					<div class="media-body">
+						<h4 class="media-heading">Mes emprunts</h4>				
+						<i class="text-muted">Nombre : 					
+							<span class="text-success">{{totMyBorrow }}</span>
+						</i>
+					</div>
+			
+			</div>
+
+			<div id="collapse_my" class="collapse show" data-parent="#accordion_my">
+					
+					<div class="card-body">	
+
+						<!-- section: Table , liste des  paiements-->
+						<section class="section-list-my-borrow">
+							<div class="container-fluid">							
+
+								<div class="cardbox">
+									<div class="cardbox-heading">
+										<div class="table-responsive bootgrid">
+											
+											<div class="overlay-my-borrow" style="display:none; font-size:36px; margin:5px; text-align:center;"><i class="fas fa-sync-alt fa-spin"></i></div>
+											<!-- insertion de la liste des emprunts en cours voir -->
+											@include('borrow/view')
+                                            <!-- @include('borrow/myborrow_view') -->
+									
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</section>  
+					</div>
+			</div>
+		</div>
+	</div>
+
+
+    
+@endif
+
+
+
+
+
+@endslot
+@endcomponent

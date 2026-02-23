@@ -1,0 +1,20 @@
+@component('components/layouts/app')
+@slot('main')
+
+
+    <h1>Edit {{make.name}}</h1>
+    <form method="POST" action="/maker/{{ make.id }}/submit_edit?_method=PUT">
+    {{ csrfField() }}
+    
+
+
+      <div>
+        <label for="make_name">Nom: </label>
+        <input id="make_name" type="text" name="make_name" value="{{make.name}}"/>
+      </div>
+
+      <button type="submit">Enregistrer</button>
+    </form>
+
+@endslot
+@endcomponent

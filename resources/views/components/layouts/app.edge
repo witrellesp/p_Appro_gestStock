@@ -1,8 +1,8 @@
 {{--
-Nom: 	app.edge
+Nom: app.edge
 Auteur: William Trelles
-Date:	30.01.2019
-But: 	Page par défaut du site de gestion de stock de l'ETML
+Date: 30.01.2019
+But: Page par défaut du site de gestion de stock de l'ETML
 --}}
 <!DOCTYPE html>
 <html lang="fr">
@@ -16,8 +16,8 @@ But: 	Page par défaut du site de gestion de stock de l'ETML
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <meta name="author" content="William Trelles">
-  <meta name="description" content="{{ state.description ?? '' }}">
-  <meta name="keywords" lang="fr" content="etml, intranet, gestion@if(state.keywords), {{ state.keywords }}@endif">
+  <meta name="description" content="{{ appState.description ?? '' }}">
+  <meta name="keywords" lang="fr" content="etml, intranet, gestion@if(appState.keywords), {{ appState.keywords }}@endif">
   <meta name="language" content="fr">
 
   <meta charset="utf-8">
@@ -49,8 +49,8 @@ But: 	Page par défaut du site de gestion de stock de l'ETML
   <link rel="stylesheet" href="/vendors/font-awesome/css/all.min.css">
   <link rel="stylesheet" href="/vendors/animate/animate.min.css">
   <link rel="stylesheet" href="/vendors/datatables/datatables.css">
-<link rel="stylesheet" href="vendors/ionicons/css/ionicons.min.css">
-<link rel="stylesheet" href="vendors/bootstrap-sweetalert/animate.css">
+  <link rel="stylesheet" href="vendors/ionicons/css/ionicons.min.css">
+  <link rel="stylesheet" href="vendors/bootstrap-sweetalert/animate.css">
 
   <link rel="stylesheet" href="/vendors/crop_image/croppie.css">
   <link rel="stylesheet" href="/css/style.min.css">
@@ -62,19 +62,21 @@ But: 	Page par défaut du site de gestion de stock de l'ETML
 
 
 
-  
+
   @if($slots.head)
   {{{ await $slots.head() }}}
   @endif
 
+  <meta name="csrf-token" content="{{ csrfToken }}">
+
 </head>
 
 <body>
-  
+
   <!-- begin #page-loader -->
   <div id="page-loader" class="fade show"><span class="spinner"></span></div>
   <!-- end #page-loader -->
-  
+
 
   <!-- begin #page-container -->
   <div id="page-container" class="fade page-sidebar-fixed page-header-fixed">
@@ -101,7 +103,7 @@ But: 	Page par défaut du site de gestion de stock de l'ETML
       <!-- menu d'entête -->
       <ul class="navbar-nav navbar-right">
         <!-- AUTH STUB (tu lo remplazas cuando implementes auth) -->
-        @if(state.isAuthenticated)
+        @if(appState.isAuthenticated)
         <li>
           <a href="/logout">
             <i class="ion ion-md-log-out fa-2x fa-fw pull-left m-r-5 text-white-light"></i>
@@ -147,19 +149,19 @@ But: 	Page par défaut du site de gestion de stock de l'ETML
       <div data-scrollbar="true" data-height="100%">
 
         <!-- Profil user (stub) -->
-        @if(state.isAuthenticated)
+        @if(appState.isAuthenticated)
         <ul class="nav">
           <li class="nav-profile">
             <div class="row">
               <div class="col-sm-4">
                 <div class="user-pic">
-                  <img src="{{ state.userPhoto ?? '/img/no-photo.jpg' }}" alt="User picture" />
+                  <img src="{{ appState.userPhoto ?? '/img/no-photo.jpg' }}" alt="User picture" />
                 </div>
               </div>
 
               <div class="col-sm-8">
-                <div class="row f-s-14">{{ state.userId ?? '' }}</div>
-                <div class="row text-orange">{{ state.userFullName ?? '' }}</div>
+                <div class="row f-s-14">{{ appState.userId ?? '' }}</div>
+                <div class="row text-orange">{{ appState.userFullName ?? '' }}</div>
                 <div class="row">
                   <div class="col-sm-3 p-t-5">
                     <div class="box">
@@ -188,7 +190,7 @@ But: 	Page par défaut du site de gestion de stock de l'ETML
           </li>
 
           <!-- Gestion (solo admin) -->
-          @if(state.isAdministrator)
+          @if(appState.isAdministrator)
           <li class="nav-header">Gestion</li>
           <li>
             <a href="/gest_tables">
@@ -197,11 +199,7 @@ But: 	Page par défaut du site de gestion de stock de l'ETML
           </li>
           @endif
 
-           <li>
-            <a href="/gest_tables">
-              <i class="fa fa-calendar"></i> <span>Entités de base</span>
-            </a>
-          </li>
+
 
           <li class="nav-header">Emprunts</li>
           <li>
@@ -213,8 +211,8 @@ But: 	Page par défaut du site de gestion de stock de l'ETML
 
         <!-- Menu dynamique catégories (stub por ahora) -->
         <div id="mnuNavMateriel">
-          @if(state.menuHtml)
-          {{{ state.menuHtml }}}
+          @if(appState.menuHtml)
+          {{{ appState.menuHtml }}}
           @endif
         </div>
 
@@ -226,13 +224,13 @@ But: 	Page par défaut du site de gestion de stock de l'ETML
 
     <!-- begin #content -->
     <div id="content" class="content">
-      
+
       <!-- Flash messages (stub) -->
-      @if(state.flash)
-      <div class="alert alert-{{ state.flash.type ?? 'info' }} fade in" role="alert">
-        <p class="font-weight-600">{{ state.flash.title ?? '' }}</p>
+      @if(appState.flash)
+      <div class="alert alert-{{ appState.flash.type ?? 'info' }} fade in" role="alert">
+        <p class="font-weight-600">{{ appState.flash.title ?? '' }}</p>
         <ul>
-          @each(error in state.flash.messages)
+          @each(error in appState.flash.messages)
           <li class="p-l-10">{{ error }}</li>
           @endeach
         </ul>
@@ -240,6 +238,14 @@ But: 	Page par défaut du site de gestion de stock de l'ETML
       @endif
 
       {{{ await $slots.main() }}}
+
+      <pre>
+      Auth: {{ appState?.isAuthenticated }}
+      Admin: {{ appState?.isAdministrator }}
+
+
+
+      </pre>
     </div>
     <!-- end #content -->
 
