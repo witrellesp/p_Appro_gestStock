@@ -1,0 +1,261 @@
+@component('components/layouts/app')
+@slot('main')
+
+
+
+<!--  ------------------------------------------------------------------------------
+     modal PoPup pour :
+            - ajout et suppression d'un article 
+            voir les méthodes dans article.js
+------------------------------------------------------------------------------------  -->
+<div id="article-modal" class="modal fade " role="dialog" data-toggle="modal"></div>
+
+<!-- ----------------------------------------------------------------------------------------
+		Insertion du code gérant la modal PoPup pour la vue qrcode d'un article
+------------------------------------------------------------------------------------  -->
+<div id="modViewQrcodeArticle"></div>
+
+
+<!-- ----------------------------------------------------------------------------------------
+		Insertion du code gérant la modal PoPup pour la vue détail d'un article
+------------------------------------------------------------------------------------  -->
+<div id="modViewArticle"></div>
+
+<!-- ----------------------------------------------------------------------------------------
+	il faut être connecté pour emprunter, restituer ou modifier un article
+		Insertion du code gérant la modal PoPup pour :
+			- l'ajout d'un emprunt
+			- le retour d'un emprunt
+			- la modification d'un emprunt
+------------------------------------------------------------------------------------  -->
+@if(appState.isAuthenticated) 
+  @include('partials/borrow_modal')
+@endif
+
+
+<!-- ----------------------------------------------------------------------------------------
+	insertion d'une popup modal selon qu'on veut
+        emprunter ou restituer un article         
+		voir etml.js 								
+------------------------------------------------------------------------------------  -->
+<div class="borrow_content"></div>
+
+
+<h1 class="page-header"> {{menu.kind.name}} - {{menu.name}}</small></h1>
+
+{{-- @if(products !=== 0)
+
+@end --}}
+
+
+
+@each(p in products)
+<div id="accordion" class="card-accordion">
+  <div class="card">
+
+    <div class="card-header bg-grey-light text-seondary pointer-cursor" style="height: 6rem;" data-toggle="collapse"
+      data-target="#collapse_{{p.id}}">
+
+      <li class="media media-sm">
+        <a href="javascript:;" class="pull-left">
+          <img src="<?php echo $this->html()->imgCheck(IMAGES_URL_PRODUCTS.$product->prod_picture().'.jpg'); ?>" alt=""
+            class="media-object ">
+        </a>
+        <div class="media-body">
+          <a href="javascript:;">
+            <h4 class="media-heading">{{ p.name}}</h4>
+          </a>
+          <p class="m-b-5">
+            {{p.description}}
+          </p>
+          <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+          <i class="text-muted">Nombre d'articles :
+
+            <!-- chercher les produits existant dans l'article -->
+            {{ articles.filter(a => a.fkProduct === p.id).length }}
+
+            {{-- TODO : A ENLEVER
+            <pre>{{ JSON.stringify(articles, null, 2) }}</pre> --}}
+
+
+
+          </i>
+        </div>
+
+
+
+      </li>
+    </div>
+
+    <!-- on vérifie si la clé du produit existe dans le tableau articles c'est à dire si il ya des articles pour ce produit 
+									     si pas de clé ... alors on affiche pas de vignette -->
+    @if( articles.filter(a => a.fkProduct === p.id))
+
+    <div id="collapse_{{p.id}}" class="collapse show" data-parent="#accordion">
+      <div class="card-body">
+
+        <div class="row">
+
+
+        @each(article in articles.filter(a => a.fkProduct === p.id))
+          
+
+
+          <!-- begin shadow-card -->
+          <div class="shadow-card  m-r-10 m-b-10" style="width: 12rem">
+
+            <div class="widget-list widget-list-rounded" data-id="widget">
+
+
+              <!-- begin widget-list-item -->
+              <div id="box_article" class="widget-list-item">
+
+
+                <div class="widget-list-media bg-none">
+
+
+                  @if(article.isBorrowed )
+                  <i id="c_{{article.id}}" class="fas fa-lg fa-fw m-r-10 fa-times fa-2x text-red"
+                    style="line-height: 30px"></i>
+
+                  @else
+
+                  <i id="c_{{article.id}}" class="fas fa-lg fa-fw m-r-10 fa-check fa-2x text-green"
+                    style="line-height: 30px"></i>
+
+                  @endif
+                </div>
+
+
+
+                <div class="widget-list-content">
+                  <a href="#" data-toggle="modal" onclick="setArticleView({{article.id}})">
+                    <h4 class="widget-list-title">
+                      {{ article.label}}
+                    </h4>
+                  </a>
+                  <p class="widget-list-desc">
+                    {{ article.chest.room.name}} / {{ article.chest.name}}
+                  </p>
+                  <p class="widget-list-desc text-warning">
+
+                    @if(article.isBorrowed)
+                    {{article.user.firstname}} {{article.user.name}}
+                    @else
+
+                    @end
+
+                  </p>
+                </div>
+
+
+              </div>
+
+
+              <!-- begin boutons icones -->
+              <div class="widget-list-item bg-grey-transparent-5 text-center">
+                <!-- end widget-list-item -->
+                <span><a href="#" class="text-grey-darker" data-toggle="modal"
+                    onclick="setArticleQrCodeView({{article.id}})">
+                    <i class="fas fa-qrcode  width-30 height-30 f-s-20 text-center " style="line-height: 30px"></i>
+                </span></a>
+
+                <!-- il faut être connecté pour emprunter ou restitué un article -->
+
+                @if(appState.isAuthenticated)
+
+
+              <!--onclick="setModBorrow('<?php echo $user->getAttribute('user')->id_user(); ?>','<?php echo $article['isBorrow']; ?>','<?php echo $article['id_borr']; ?>','<?php echo $article['id_arti']; ?>')" -->
+
+                <span id="borrModOpen"
+                  
+                  onclick="setModBorrow('{{appState.user.id}}','{{ article.isBorrowed ? 1 : 0}}','{{article.borrow?.id ?? ''}}','{{article.id}}')"
+                  
+                  data-toggle="modal"><a href="#" class="text-grey-darker">
+                    <!-- TODO on vérifie si l'article est emprnté   <?php if ($article['isBorrow']){ ?> -->
+
+                    @if(article.isBorrowed)
+
+                    {{-- retourner --}}
+                    <i id="i_{{article.id}}"
+                      class="fas fa-sign-in-alt fa-rotate-90  width-30 height-30 f-s-20  text-center "
+                      style="line-height: 30px"></i>
+                    @else
+
+                    {{-- emprunter --}}
+                    <i id="i_{{article.id}}"
+                      class="fas fa-sign-out-alt fa-rotate-270 fa-2x width-30 height-30 f-s-20 text-center"
+                      style="line-height: 30px"></i>
+                    @end
+
+                </span></a>
+
+
+
+
+
+                <!-- seul un administrateur  peut modifier ou supprimer un article -->
+
+                @if(appState?.isAdministrator)
+
+                <span><a href="#" class="text-grey-darker">
+                    <i class="fas fa-edit  width-30 height-30 f-s-20 text-center " style="line-height: 30px"></i>
+                </span></a>
+
+                <span><a href="#" class="text-grey-darker">
+                    <i class="fas fa-trash-alt  width-30 height-30 f-s-20 text-center " style="line-height: 30px"></i>
+                </span></a>
+
+                @endif
+
+                @endif
+
+              </div>
+              <!-- end boutons icones -->
+            </div>
+          </div>
+          <!-- begin shadow-card -->
+          @endeach
+          <!-- end each -->
+        </div>
+
+      </div>
+    </div>
+
+
+
+
+
+
+    @endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+
+
+
+
+</div>
+
+
+@endeach
+
+
+
+
+@endslot
+@endcomponent

@@ -1,0 +1,39 @@
+<ul id="nav-Kinds" class="nav">
+    <li class="nav-header">Materiel</li>
+
+    @each(kind in menuTree)
+
+    @if(kind.categories.length)
+
+        <li class="has-sub">
+        <a href="javascript:;">
+            <b class="caret">
+            </b>
+            <i class="fa fa-bars">
+            </i>
+            <span>{{ kind.name }}</span>
+        </a>
+
+        <ul class="sub-menu">
+            @each(cat in kind.categories)
+            <li class="{{ selectedCategoryId === cat.id ? 'active' : '' }}">
+                <a href="/products?categoryId={{ cat.id }}">
+                    <i class="fa fa-circle-o"></i> {{ cat.name }}
+                </a>
+            </li>
+            @endeach
+
+
+        </ul>
+    </li>
+    @else
+    <li class="has-sub"><a href="javascript:;">
+            <i class="fa fa-bars"></i>
+            <span>{{kind.name}}</span></a>
+    </li>
+
+
+
+    @endif
+    @endeach
+</ul>

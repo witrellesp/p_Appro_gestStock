@@ -1,0 +1,62 @@
+<table class="table table-striped bootgrid-table" id="datatable-all-borrows" aria-busy="false">
+	<thead>
+		<tr>
+			<th data-column-id="kind_name">Matériel</th>
+			<th data-column-id="cate_name">Catégorie</th>
+			<th data-column-id="prod_name">Produit</th>
+			<th data-column-id="arti_label">Identifiant</th>
+			<th data-column-id="borr_owner">Qui</th>
+			<th data-column-id="borr_forwho">Pour</th>
+			<th data-column-id="borr_location">Où</th>
+			<th data-column-id="borr_stockage">Stockage</th>
+			<th data-column-id="borr_taken_date">Emprunté le</th>
+
+			{{--<th data-column-id="commands" data-sortable="false"></th><--}} </tr>
+	</thead>
+
+	<tbody>
+
+
+		@each(r in myborrowsView)
+
+		@if(r.borr_returned_visa == null)
+
+		<tr class="gradeX">
+			<td class="text-left">{{ r.kind_name }}</td>
+			<td class="text-left">{{ r.cate_name }}</td>
+			<td class="text-left">{{ r.prod_name }}</td>
+
+
+			<td class="text-left">
+				<a href="#" data-toggle="modal" onclick="setArticleView(<?= $borrow->id_arti() ?>)">
+					<h5 class="widget-list-title text-orange-darker">{{ r.arti_label }}</h5>
+				</a>
+			</td>
+
+			<td class="text-left">{{r.user_firstname}} {{r.user_name}}</td>
+			<td class="text-left">{{r.borr_forwho}}</td>
+			<td class="text-left">{{r.borr_location}}</td>
+			<td class="text-left">{{r.room_name}}//{{r.ches_name}}</td>
+			<td class="text-left">{{r.borr_taken_date}}</td>
+			<td class="text-md-right">
+
+				
+				<form method="POST" action="/borrow/{{r.borr_id}}/back">
+					{{ csrfField() }}
+
+					<button type="submit" class="btn btn-xs btn-info">
+						<i class="fas fa-sign-in-alt fa-rotate-90 text-center"></i>
+					</button>
+
+				</form>
+
+			</td>
+		</tr>
+
+		@endif
+		@endeach
+
+	</tbody>
+
+
+</table>

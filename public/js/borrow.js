@@ -144,7 +144,10 @@ function setModBorrow(idUser,borrType,idBorrow,idArticle) {
 			datatype : "json",
 			url : "/articles/"+idArticle+"/get",
 			success: function (data) { 
-				var value = $.parseJSON(data);
+				var value = data;
+
+				console.log(typeof data, data)
+				
 
 				$("#borrModalHeaderLabel").text("Retour d'un prêt : "+value.arti_label);
 
@@ -171,7 +174,6 @@ function setModBorrow(idUser,borrType,idBorrow,idArticle) {
 	// si on veut ajouter un emprunt
 	else if (borrType==0){
 
-
 		$("#borrForWho").show();
 		$("#borrReasPlace").show();
 		$("#borrNote").hide();
@@ -193,7 +195,7 @@ function setModBorrow(idUser,borrType,idBorrow,idArticle) {
 				datatype : "json",
 				url : "/articles/"+idArticle+"/get",
 				success: function (data) { 
-					var value = $.parseJSON(data);
+					var value = data;
 
 					$("#borrModalHeaderLabel").text("Ajout d'un prêt : "+value.arti_label);
 

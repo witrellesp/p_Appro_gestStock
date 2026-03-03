@@ -3,6 +3,7 @@ import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import Article from '#models/article'
 import Note from '#models/note'
+import User from './user.js'
 
 export default class Borrow extends BaseModel {
 
@@ -17,13 +18,13 @@ export default class Borrow extends BaseModel {
   @column({ columnName: 'borr_forwho' })
   declare forwho: string
 
-  @column({ columnName: 'borr_taken_date' })
+  @column.dateTime({ columnName: 'borr_taken_date' })
   declare taken_date: DateTime
 
   @column({ columnName: 'borr_returned_visa' })
   declare returned_visa: string
 
-  @column({ columnName: 'borr_returned_date' })
+  @column.dateTime({ columnName: 'borr_returned_date' })
   declare returned_date: DateTime
 
   @column({ columnName: 'borr_reason' })
@@ -45,6 +46,15 @@ export default class Borrow extends BaseModel {
     // Rélation: un borrow peut avoir plusieurs notes
   @hasMany(() => Note, { foreignKey: 'fkBorrow' })
   declare notes: HasMany<typeof Note>
+
+  
+  // Rélation entre borr_owner et le id de User
+  @belongsTo(()=> User,{
+    foreignKey: 'owner',
+    localKey: 'id'
+
+  })
+  declare ownerUser: BelongsTo<typeof User>
 
 
 }

@@ -40,4 +40,13 @@ export default class Article extends BaseModel {
   // Rélation: un article peut avoir plusieurs emprunts
   @hasMany(() => Borrow, { foreignKey: 'fkArticle' })
   declare borrow: HasMany<typeof Borrow>
+
+  async isBorrowed(){
+    const active = await Borrow.query()
+    .where('fkArticle',this.id)
+    .whereNull('borr_returned_date')
+    .first()
+    return !!active
+  }
+  
 }

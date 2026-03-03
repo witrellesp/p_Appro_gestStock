@@ -13,8 +13,13 @@ import { middleware } from '#start/kernel'
 const GestionsController = () => import ('#controllers/gestions_controller')
 const ConnectionsController = () => import ('#controllers/connections_controller')
 const BorrowsController = () => import ('#controllers/borrows_controller')
+const ProductsController = () => import ('#controllers/products_controller')
+const MenusController = () => import ('#controllers/menus_controller')
+
 
 import db from '@adonisjs/lucid/services/db'
+import { AssertionError } from 'assert/strict'
+import ArticlesController from '#controllers/articles_controller'
 
 
 // TEST DB CONECTION
@@ -39,28 +44,35 @@ router.post('/login',[ConnectionsController,'login'])
 router.get('/logout',[ConnectionsController,'logout'])
 
 
+
+/* EMPRUNTS */
 // Page principal des emprunts
 router.get('/borrow', [BorrowsController, 'index'])
 
 // Tous les emprunts
 router.get('/borrow/view', [BorrowsController, 'view'])
-
 // Mes emprunts
-router.get('/borrow/:id/myborrow',[BorrowsController,'myborrow'])
+router.get('/borrow/myborrow',[BorrowsController,'myborrow'])
 
-// Ajout un emprunt
-router.get('/borrow/:id/add',[BorrowsController,'add'])
+// Ajout d un emprunt
+router.post('/borrow/:id/add',[BorrowsController,'add'])
 
-// Retour un emprunt
-router.get('/borrow/:id/back',[BorrowsController,'back'])
-
-
+// Retour d un emprunt
+router.post('/borrow/:id/back',[BorrowsController,'back'])
 
 
 
 
+/* Articles */
+router.get('/articles/:id/get',[ArticlesController,'get'])
 
 
+
+/* Products */
+// Liste des articles selon catégorie
+router.get('/products',[ProductsController,'index'])
+
+router.get('/menu',[MenusController,'index'])
 
 
 // GROUP GEST - AUTH ET ADMIN REQUIS

@@ -1,0 +1,119 @@
+<!-- Popup modal pour la modification et l'ajout d'emprunt    -->
+<!-- 15.02.2019 - DLS                                               -->
+<!-- ************************************************************** -->
+<!-- Le contenu de la popup modal est modifiée à travers la
+     méthode javascript setBorrow(idUser,borrType,idBorrow) dans : borrow.js
+     déclenchée par les  boutons d'ajout et de modification dans la grille de la
+     liste des rattrapage                                           -->
+<!-- ****************************************************** -->
+
+<div id="borrModalAddUpdate" class="modal fade" role="dialog">
+    
+
+<div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title " id="borrModalHeaderLabel">Modal Dialog</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="cardbox-body">
+                        
+                    <li class="media ">
+                        <a href="javascript:;" class="pull-left">
+                            <img id="borr_prod_img" src="../img/user/user-12.jpg" alt="" class="media-object ">
+                        </a>
+                        <div class="media-body pull-right">
+                            <a href="javascript:;"><h4 id="borr_prod_name" class="media-heading">?</h4></a>
+                            <p id="borr_prod_descr" class="m-b-5">
+                            ?
+                            </p>
+
+                            <p><small><i id="borr_prod_note" class="text-muted"></i> </small>
+                            </p>
+
+                            <p> <small><i id="borr_arti_note" class=" text-orange "></i> </small>
+                            </p>
+                            
+                        </div>
+                    </li>
+
+                </div>
+
+                <form action="" method="post" id="borrow_form">
+                    {{ csrfField() }}
+                    <div class="cardbox-body">
+
+                        <!-- Visa , pour qui et la date d'emprunt -->
+                        <div class="row p-t-20"> 
+                            
+                            <div class="col-lg-2 col-md-6">
+                                <label id="borrVisa" for="txtTaken_visa">Visa de validation</label>
+                                <input class="form-control" type="text" name="taken_visa" readonly  id="taken_visa" value="{{appState.user.id}}">
+                            </div>
+                        
+                            <div class="col-lg-5 col-md-6" id="borrForWho" >
+                                <label for="txtTaken_forwho">Pour qui ?</label>
+                                <input class="form-control" type="text" name="taken_forwho_visa" id="taken_forwho_visa">
+                                <span id="error_taken_forwho_visa" class="text-danger"></span>                       
+                            </div>
+                            
+                            <div class="col-lg-5 col-md-6">
+                                <label id="borrLblDate" for="txtDate_borrow">Date d'emprunt</label>
+                                <input type="text" class="form-control" id="borrDtPicker" name ="borrDtPicker" readonly >  
+                                <!-- champs cachés pour le passage de la date en post
+                                on reconstruit la date qui est au format jeudi, 25 mars 2017 en
+                                25.03.217  selon code déjà fait .. la conversion est faite au niveau sql .. -->
+                                <input type='hidden'  name='hideBorrDtPicker' id="hideBorrDtPicker">
+                                <span id="error_take_date" class="text-danger"></span>   
+                            </div>
+                        </div>
+                        <!-- end row p-t-20 -->
+
+                        <!-- Raison et le lieu d'utilisation -->
+                        <div id="borrReasPlace" class="row p-t-20">                        
+                            <div class="col-lg-7 col-md-6">
+                                <label for="txtTaken_reasen">Raison</label>
+                                <input class="form-control" type="text" name="taken_reasen"   id="taken_reasen" >
+                                <span id="error_taken_reasen" class="text-danger"></span>
+                            </div>
+
+                            
+                            <div class="col-lg-5 col-md-6">
+                                <label for="txtTaken_place">Lieu d'utilisation</label>
+                                <input class="form-control" type="text" name="taken_place" id="taken_place"> 
+                                <span id="error_taken_place" class="text-danger"></span>                      
+                            </div>                  
+                        </div>
+                        <!-- end row p-t-20 -->
+
+                        <!-- Remarques -->
+                        <div id="borrNote" class="row p-t-20">
+                            <div class="col-lg-12 col-md-6">
+                                <label for="txtTaken_reason">Remarque</label>
+                                <textarea class="form-control"name="taken_note" id="taken_note"  rows="3"></textarea>
+                            </div>
+                        </div>
+                        <!-- end row p-t-20 -->
+
+
+                    </div>
+                    <!-- cardbox-body -->
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="button" id="borrButtonSubmit" onclick="" class="btn btn-success">Action</button>
+            </div>
+
+        </div>
+
+        <div id="action_alert" title="Action"></div>
+				
+
+    </div>
+
+</div> <!-- ./modal fade -->

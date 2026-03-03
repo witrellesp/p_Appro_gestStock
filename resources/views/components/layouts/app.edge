@@ -17,7 +17,8 @@ But: Page par défaut du site de gestion de stock de l'ETML
 
   <meta name="author" content="William Trelles">
   <meta name="description" content="{{ appState.description ?? '' }}">
-  <meta name="keywords" lang="fr" content="etml, intranet, gestion@if(appState.keywords), {{ appState.keywords }}@endif">
+  <meta name="keywords" lang="fr"
+    content="etml, intranet, gestion@if(appState.keywords), {{ appState.keywords }}@endif">
   <meta name="language" content="fr">
 
   <meta charset="utf-8">
@@ -155,13 +156,13 @@ But: Page par défaut du site de gestion de stock de l'ETML
             <div class="row">
               <div class="col-sm-4">
                 <div class="user-pic">
-                  <img src="{{ appState.userPhoto ?? '/img/no-photo.jpg' }}" alt="User picture" />
+                  <img src="{{ appState.user.url ?? '/img/no-photo.jpg' }}" alt="User picture" />
                 </div>
               </div>
 
               <div class="col-sm-8">
-                <div class="row f-s-14">{{ appState.userId ?? '' }}</div>
-                <div class="row text-orange">{{ appState.userFullName ?? '' }}</div>
+                <div class="row f-s-14">{{ appState.user.id ?? '' }}</div>
+                <div class="row text-orange">{{ appState.user.firstname ?? '' }} {{ appState.user.name ?? '' }}</div>
                 <div class="row">
                   <div class="col-sm-3 p-t-5">
                     <div class="box">
@@ -201,25 +202,43 @@ But: Page par défaut du site de gestion de stock de l'ETML
 
 
 
+          @if(appState.isAuthenticated)
           <li class="nav-header">Emprunts</li>
           <li>
             <a href="/borrow">
               <i class="fa fa-shopping-basket"></i> <span>Liste</span>
             </a>
           </li>
-        </ul>
-
-        <!-- Menu dynamique catégories (stub por ahora) -->
-        <div id="mnuNavMateriel">
-          @if(appState.menuHtml)
-          {{{ appState.menuHtml }}}
           @endif
-        </div>
+
+
+
+
+
+
+
+          <!-- Menu dynamique catégories (stub por ahora) -->
+          <div id="mnuNavMateriel">
+            @include('menu/index')
+          </div>
+
+
+
+
+
 
 
 
       </div>
+      </ul>
+
+
+
+
+
+
     </div>
+
     <!-- end #sidebar -->
 
     <!-- begin #content -->
@@ -240,23 +259,22 @@ But: Page par défaut du site de gestion de stock de l'ETML
       {{{ await $slots.main() }}}
 
       <pre>
-      Auth: {{ appState?.isAuthenticated }}
-      Admin: {{ appState?.isAdministrator }}
+
 
 
 
       </pre>
     </div>
     <!-- end #content -->
-
+    <div id="footer" class="footer">
+      2026 Gestion Stock ETML informatique - William Trelles
+    </div>
   </div>
   <!-- end #page-container -->
 
 
 
-  <div id="footer" class="footer">
-    2026 Gestion Stock ETML informatique - William Trelles
-  </div>
+
 
 
   <!-- JS (copiés depuis le legacy, à placer dans /public) -->
@@ -296,7 +314,7 @@ But: Page par défaut du site de gestion de stock de l'ETML
   </script>
 
 
-
+  </div>
 </body>
 
 </html>

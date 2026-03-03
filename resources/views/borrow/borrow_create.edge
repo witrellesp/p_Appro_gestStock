@@ -1,0 +1,39 @@
+@component('components/layouts/app')
+@slot('main')
+<h1>Ajout d'un prêt</h1>
+
+
+@if(flashMessages.get('error'))
+<p style="color:red">
+    {{ flashMessages.get('error') }}
+</p>
+@endif
+
+<form method="POST" action="/borrow/submit_add">
+    {{ csrfField() }}
+
+    <div>
+        <label for="borr_visa">Visa: </label>
+        <input id="borr_visa" type="text" name="bor_visa" />
+        <input id="borr_forwho" type="text" name="borr_forwho" value="{{ userId }}" />
+
+        <label for="borr_forwho">Pour qui? </label>
+        <input id="borr_forwho" type="text" name="borr_forwho" />
+
+        <label for="borr_taken_date">Date du prêt </label>
+        <input id="borr_taken_date" type="text" name="borr_taken_date" value="{{ nowDate }}" />
+
+        <label for="borr_note">Raison </label>
+        <input id="borr_note" type="text" name="borr_note" />
+
+        <label for="borr_location">Lieu d'utilisation </label>
+        <input id="borr_location" type="text" name="borr_location" />
+
+    </div>
+
+    <button type="submit">Enregistrer</button>
+</form>
+
+
+@endslot
+@endcomponent

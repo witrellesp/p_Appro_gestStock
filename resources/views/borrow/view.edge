@@ -11,7 +11,8 @@
 			<th data-column-id="borr_stockage">Stockage</th>
 			<th data-column-id="borr_taken_date">Emprunté le</th>
 
-			<th data-column-id="commands"  data-sortable="false"></th>
+			{{--<th data-column-id="commands"  data-sortable="false"></th><--}}
+			
 
 		</tr>
 	</thead>
@@ -19,34 +20,41 @@
 	<tbody>
 		
 		
-		@each(b in borrowsView)
+		@each(r in borrowsView)
 		
-		
+			@if(r.borr_returned_visa == null)
 
 			<tr class="gradeX">
-				<td class="text-left">{{ b.kindName }}</td>
-				<td class="text-left"><?= $borrow->cate_name()  ?></td>
-				<td class="text-left"><?= $borrow->prod_name() ?></td>
-				<td class="text-left">
+				<td class="text-left">{{ r.kind_name }}</td>
+				<td class="text-left">{{ r.cate_name }}</td>
+				<td class="text-left">{{ r.prod_name }}</td>
+					
+
+					<td class="text-left">
 					<a href="#"  data-toggle="modal" onclick="setArticleView(<?= $borrow->id_arti() ?>)">
-						<h5 class="widget-list-title text-orange-darker"><?= $borrow->arti_label() ?></h5>
+						<h5 class="widget-list-title text-orange-darker">{{ r.arti_label }}</h5>
 					</a>
 				</td>
-				<td class="text-left"><?= $borrow->user_firstname()." ".$borrow->user_name() ?></td>
-				<td class="text-left"><?= $borrow->borr_forwho() ?></td>
-				<td class="text-left"><?= $borrow->borr_location() ?></td>
-				<td class="text-left"><?= $borrow->room_name()." / ". $borrow->ches_name() ?></td>
-				<td class="text-left"><?= date_format(date_create($borrow->borr_taken_date()),"d-m-Y") ?></td>
-				<td class="text-md-right">
 				
-					<button type="button" class="btn btn-xs btn-info" 
+				<td class="text-left">{{r.user_firstname}} {{r.user_name}}</td>
+				<td class="text-left">{{r.borr_forwho}}</td>
+				<td class="text-left">{{r.borr_location}}</td>
+				<td class="text-left">{{r.room_name}}//{{r.ches_name}}</td>
+				<td class="text-left">{{r.borr_taken_date}}</td>
+				<td class="text-md-right">
+
+
+					{{-- TODO: finir le retour d'emprunts depuis la vue de tous les emprunts --}}
+										<button type="button" class="btn btn-xs btn-info" 
 							onclick="setModBorrow('<?php echo $user->getAttribute('user')->id_user(); ?>',1,'<?php echo $borrow->id_borr() ?>','<?php echo $borrow->id_arti(); ?>')">
 							<i class="fas fa-sign-in-alt fa-rotate-90 text-center "></i>
-					</button>				
+					</button>	
+				
+			
 				</td>
 			</tr>
 
-		
+		@endif
 		@endeach
 		      
 	</tbody>

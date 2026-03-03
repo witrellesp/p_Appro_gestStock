@@ -37,7 +37,8 @@ router.use([
   () => import('@adonisjs/session/session_middleware'),
   () => import('@adonisjs/shield/shield_middleware'),
   () => import('@adonisjs/auth/initialize_auth_middleware'),
-  () => import('#middleware/share_auth_state_middleware')
+  () => import('#middleware/share_auth_state_middleware'),
+  () => import('#middleware/share_menu_middleware')
 ])
 
 /**
@@ -47,5 +48,6 @@ router.use([
 export const middleware = router.named({
   guest: () => import('#middleware/guest_middleware'),
   auth: () => import('#middleware/auth_middleware'),
-  admin: () => import('#middleware/admin_middleware')
+  admin: () => import('#middleware/admin_middleware'),
+  menu: () => import('#middleware/share_menu_middleware')
 })
