@@ -127,6 +127,7 @@ function setModBorrow(idUser,borrType,idBorrow,idArticle) {
 
 		$("#borrButtonSubmit").text("Retour");
 
+
 		$("#borrForWho").hide();
 		$("#borrReasPlace").hide();
 		$("#borrNote").show();
@@ -146,6 +147,8 @@ function setModBorrow(idUser,borrType,idBorrow,idArticle) {
 			success: function (data) { 
 				var value = data;
 
+				
+				console.log('retour emprunt')
 				console.log(typeof data, data)
 				
 
@@ -196,6 +199,10 @@ function setModBorrow(idUser,borrType,idBorrow,idArticle) {
 				url : "/articles/"+idArticle+"/get",
 				success: function (data) { 
 					var value = data;
+
+									
+				console.log('ajout emprunt')
+				console.log(typeof data, data)
 
 					$("#borrModalHeaderLabel").text("Ajout d'un prêt : "+value.arti_label);
 

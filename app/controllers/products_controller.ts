@@ -40,9 +40,9 @@ export default class ProductsController {
     const rows = articles.map((a) => ({
       ...a.serialize(),
       isBorrowed: Number(a.$extras.borrow_count ?? 0) > 0,
-      ownerUserName: a.borrow?.[0]?.ownerUser.name ?? null,
-      user: a.borrow?.[0]?.ownerUser ?? null,
-      borrow: a.borrow?.[0] ?? null 
+      ownerUserName: a.borrow?.at(-1)?.ownerUser.name ?? null,
+      user: a.borrow?.at(-1)?.ownerUser ?? null,
+      borrow: a.borrow?.at(-1) ?? null // pour trouver le dernier borrow lié a cette article
     }))
 
 

@@ -1,9 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Borrow from '#models/borrow'
-import Product from '#models/product'
-import Article from '#models/article'
-import { DateTime } from 'luxon'
-import { PassThrough } from 'stream'
+
 
 export default class BorrowsController {
   async index({ view, auth }: HttpContext) {
@@ -212,9 +209,12 @@ export default class BorrowsController {
     const idBorrow = params.id
 
     console.log('params',params)
+    console.log('idBorrow',idBorrow)
 
     const takenVisa = request.input('taken_visa')
     const returnedDate = request.input('hideBorrDtPicker')
+    console.log('returnedDate',returnedDate)
+
     const returnedNote = request.input('taken_note')
 
     const arrError = { msgErr: '' }
@@ -222,6 +222,7 @@ export default class BorrowsController {
 
     try {
       const borrow = await Borrow.find(idBorrow)
+      console.log('borrowBefore',borrow)
 
       if (!borrow) {
         return response.notFound({ msgErr: "Emprunt introuvable" })
@@ -232,6 +233,9 @@ export default class BorrowsController {
       borrow.note = returnedNote
 
       await borrow.save()
+
+      console.log('borrowAfter',borrow)
+
 
       return response.json(arrError)
 

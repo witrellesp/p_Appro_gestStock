@@ -31,6 +31,7 @@ export default class ArticlesController {
 
 
         console.log('article', article.toJSON ? article.toJSON() : article)
+        console.log('params',params)
 
         return response.json(rows)
     }
