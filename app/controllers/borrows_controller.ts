@@ -194,35 +194,33 @@ export default class BorrowsController {
 
       )
 
+      //return response.json({ debug: 'add hit' })
       return response.json(arrError)
 
     } catch (error) {
+
+      console.log('BORROW ADD ERROR', error)
       arrError.msgErr = 'Erreur lors de l’ajout'
       return response.status(500).json(arrError)
     }
   }
 
-/**
- * Retour d'un emprunt
- */
+  /**
+   * Retour d'un emprunt
+   */
   async back({ request, response, params }: HttpContext) {
     const idBorrow = params.id
 
-    console.log('params',params)
-    console.log('idBorrow',idBorrow)
-
     const takenVisa = request.input('taken_visa')
     const returnedDate = request.input('hideBorrDtPicker')
-    console.log('returnedDate',returnedDate)
 
     const returnedNote = request.input('taken_note')
 
     const arrError = { msgErr: '' }
 
-
     try {
       const borrow = await Borrow.find(idBorrow)
-      console.log('borrowBefore',borrow)
+      
 
       if (!borrow) {
         return response.notFound({ msgErr: "Emprunt introuvable" })
@@ -234,11 +232,7 @@ export default class BorrowsController {
 
       await borrow.save()
 
-      console.log('borrowAfter',borrow)
-
-
       return response.json(arrError)
-
 
     } catch (error) {
       console.error(error)

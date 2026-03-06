@@ -6,27 +6,27 @@
  * @module borrow
  */
 
- /***
- * --------------------------------------------------------
- * *** 			ENTETE DE MODULE - borrow.js			***
- * --------------------------------------------------------
- * ETML
- * Auteur 		: Dimitrios Lymberis
- * Date 		: 15.02.2019
- * *************************************
- * Description 	: gestion des emprunts
- *				  ajout modification et suppression des
- *				  emprunts avec jquery ajax
- *
- * ---------------------------------------------------------
- */
+/***
+* --------------------------------------------------------
+* *** 			ENTETE DE MODULE - borrow.js			***
+* --------------------------------------------------------
+* ETML
+* Auteur 		: Dimitrios Lymberis
+* Date 		: 15.02.2019
+* *************************************
+* Description 	: gestion des emprunts
+*				  ajout modification et suppression des
+*				  emprunts avec jquery ajax
+*
+* ---------------------------------------------------------
+*/
 
 
-var classIcoIn="fas fa-sign-out-alt fa-rotate-270 fa-2x width-30 height-30 f-s-20 text-center";
-var classIcoOut="fas fa-sign-in-alt fa-rotate-90  width-30 height-30 f-s-20  text-center";
+var classIcoIn = "fas fa-sign-out-alt fa-rotate-270 fa-2x width-30 height-30 f-s-20 text-center";
+var classIcoOut = "fas fa-sign-in-alt fa-rotate-90  width-30 height-30 f-s-20  text-center";
 
-var classCheckIn="fas fa-lg fa-fw m-r-10 fa-check fa-2x text-green";
-var classCheckOut="fas fa-lg fa-fw m-r-10 fa-times fa-2x  text-red";
+var classCheckIn = "fas fa-lg fa-fw m-r-10 fa-check fa-2x text-green";
+var classCheckOut = "fas fa-lg fa-fw m-r-10 fa-times fa-2x  text-red";
 
 /**
  * lit les emprunts et les affichent
@@ -41,18 +41,18 @@ var classCheckOut="fas fa-lg fa-fw m-r-10 fa-times fa-2x  text-red";
 function readMyBorrowRecords(idUser) {
 
 	$('#load-data-filleul').html(null);
-	$('.overlay-all-borrow').css('display','block');
-	
+	$('.overlay-all-borrow').css('display', 'block');
+
 	$.ajax({
-		type : "GET",
-		datatype : "html",
-		url : "/borrow/"+idUser+"/myborrow",
-	}).done(function(data){
-			$('.overlay-my-borrow').css('display','none');
-			$('#load-data-my-borrow').html(data);
-			
-			datatablesRefresh('#datatable-my-borrows');	
-		});
+		type: "GET",
+		datatype: "html",
+		url: "/borrow/" + idUser + "/myborrow",
+	}).done(function (data) {
+		$('.overlay-my-borrow').css('display', 'none');
+		$('#load-data-my-borrow').html(data);
+
+		datatablesRefresh('#datatable-my-borrows');
+	});
 
 } //readMyBorrowRecords
 
@@ -72,19 +72,19 @@ function readMyBorrowRecords(idUser) {
 function readAllBorrowRecords() {
 
 	$('#load-data-filleul').html(null);
-    $('.overlay-all-borrow').css('display','block');
+	$('.overlay-all-borrow').css('display', 'block');
 
 	$.ajax({
-		type : "GET",
-		datatype : "html",
-		url : "/borrow/view",
-	}).done(function(data){
-			$('.overlay-all-borrow').css('display','none');
-			$('#load-data-all-borrow').html(data);
-			
-			datatablesRefresh('#datatable-all-borrows');	
+		type: "GET",
+		datatype: "html",
+		url: "/borrow/view",
+	}).done(function (data) {
+		$('.overlay-all-borrow').css('display', 'none');
+		$('#load-data-all-borrow').html(data);
 
-		});
+		datatablesRefresh('#datatable-all-borrows');
+
+	});
 
 } //readAllBorrowRecords
 
@@ -115,12 +115,12 @@ function readAllBorrowRecords() {
  *
  * ---------------------------------------------------------
  */
-function setModBorrow(idUser,borrType,idBorrow,idArticle) {
+function setModBorrow(idUser, borrType, idBorrow, idArticle) {
 
 	var datas = null;
-	var ladate=new Date()
+	var ladate = new Date()
 
-	var proPicture="/img/nophoto.jpg";
+	var proPicture = "/img/nophoto.jpg";
 
 	// si on veut retourner un emprunt
 	if (borrType == 1) {
@@ -136,28 +136,28 @@ function setModBorrow(idUser,borrType,idBorrow,idArticle) {
 		$("#borrLblDate").text('Date de retour');
 
 		// on met à jour l'évènement click du bouton ajouter
-		document.getElementById('borrButtonSubmit').onclick=function(){backBorrow(idBorrow,idArticle);};
+		document.getElementById('borrButtonSubmit').onclick = function () { backBorrow(idBorrow, idArticle); };
 
 		//$("#take_date").val(ladate.getDate()+"."+(ladate.getMonth()+1)+"."+ladate.getFullYear())
 		//$('#take_date').datetimepicker();
 		$.ajax({
-			type : "GET",
-			datatype : "json",
-			url : "/articles/"+idArticle+"/get",
-			success: function (data) { 
+			type: "GET",
+			datatype: "json",
+			url: "/articles/" + idArticle + "/get",
+			success: function (data) {
 				var value = data;
 
-				
+
 				console.log('retour emprunt')
 				console.log(typeof data, data)
-				
 
-				$("#borrModalHeaderLabel").text("Retour d'un prêt : "+value.arti_label);
 
-				$( "#borrDtPicker" ).datepicker( "setDate", new Date() );
+				$("#borrModalHeaderLabel").text("Retour d'un prêt : " + value.arti_label);
 
-				if (value.prod_picture){
-					proPicture="/img/products/"+value.prod_picture+".jpg";
+				$("#borrDtPicker").datepicker("setDate", new Date());
+
+				if (value.prod_picture) {
+					proPicture = "/img/products/" + value.prod_picture + ".jpg";
 				}
 
 				$('#borr_prod_img').attr('src', proPicture);
@@ -173,9 +173,9 @@ function setModBorrow(idUser,borrType,idBorrow,idArticle) {
 		$("#borrModalAddUpdate").modal("show");
 
 	} //(remType  = 0)
-	
+
 	// si on veut ajouter un emprunt
-	else if (borrType==0){
+	else if (borrType == 0) {
 
 		$("#borrForWho").show();
 		$("#borrReasPlace").show();
@@ -186,7 +186,7 @@ function setModBorrow(idUser,borrType,idBorrow,idArticle) {
 
 		$("#borrButtonSubmit").text("Ajouter");
 		// on met à jour l'évènement click du bouton ajouter		
-		$('#borrButtonSubmit').attr('onclick',"addBorrow("+idArticle+")");
+		$('#borrButtonSubmit').attr('onclick', "addBorrow(" + idArticle + ")");
 
 		// On réinitialise les élèments de la popup
 		formBorrowDataReset()
@@ -194,46 +194,46 @@ function setModBorrow(idUser,borrType,idBorrow,idArticle) {
 		//$("#take_date").val(ladate.getDate()+"."+(ladate.getMonth()+1)+"."+ladate.getFullYear())
 		//$('#take_date').datetimepicker();
 		$.ajax({
-				type : "GET",
-				datatype : "json",
-				url : "/articles/"+idArticle+"/get",
-				success: function (data) { 
-					var value = data;
+			type: "GET",
+			datatype: "json",
+			url: "/articles/" + idArticle + "/get",
+			success: function (data) {
+				var value = data;
 
-									
+
 				console.log('ajout emprunt')
 				console.log(typeof data, data)
 
-					$("#borrModalHeaderLabel").text("Ajout d'un prêt : "+value.arti_label);
-
-					
-					if (value.prod_picture){
-						proPicture="/img/products/"+value.prod_picture+".jpg";
-					}
-
-					$( "#borrDtPicker" ).datepicker( "setDate", new Date() );
+				$("#borrModalHeaderLabel").text("Ajout d'un prêt : " + value.arti_label);
 
 
-					$('#borr_prod_img').attr('src', proPicture);
-
-					$('#borr_prod_name').html(value.prod_name);
-					$('#borr_prod_descr').html(value.prod_description);
-					$('#borr_prod_noter').html(value.prod_note);
-					$('#borr_arti_note').html(value.arti_note);
+				if (value.prod_picture) {
+					proPicture = "/img/products/" + value.prod_picture + ".jpg";
 				}
-			});
+
+				$("#borrDtPicker").datepicker("setDate", new Date());
+
+
+				$('#borr_prod_img').attr('src', proPicture);
+
+				$('#borr_prod_name').html(value.prod_name);
+				$('#borr_prod_descr').html(value.prod_description);
+				$('#borr_prod_noter').html(value.prod_note);
+				$('#borr_arti_note').html(value.arti_note);
+			}
+		});
 
 		// Open modal popup
 		$("#borrModalAddUpdate").modal("show");
 	}
 
 	// si on veut mettre à jour un emprunt
-	else if (borrType==2){
+	else if (borrType == 2) {
 
-		
-		
+
+
 		$("#borrButtonSubmit").text("Retour");
-	
+
 
 		$("#borrForWho").Hide();
 		$("#borrReasPlace").Hide();
@@ -243,37 +243,37 @@ function setModBorrow(idUser,borrType,idBorrow,idArticle) {
 
 
 		// on met à jour l'évènement click du bouton ajouter
-		document.getElementById('borrButtonSubmit').onclick=function(){backBorrow(idUser,idArticle);};
+		document.getElementById('borrButtonSubmit').onclick = function () { backBorrow(idUser, idArticle); };
 
 		// On réinitialise les élèments de la popup
 		formBorrowDataReset()
 
 		//$("#take_date").val(ladate.getDate()+"."+(ladate.getMonth()+1)+"."+ladate.getFullYear())
-		
+
 		$.ajax({
-				type : "GET",
-				datatype : "json",
-				url : "/articles/"+idArticle+"/get",
-				success: function (data) { 
-					var value = $.parseJSON(data);
+			type: "GET",
+			datatype: "json",
+			url: "/articles/" + idArticle + "/get",
+			success: function (data) {
+				var value = $.parseJSON(data);
 
-					$("#borrModalHeaderLabel").text("Retour d'un prêt : "+value.arti_label);
+				$("#borrModalHeaderLabel").text("Retour d'un prêt : " + value.arti_label);
 
-					$('#borr_prod_img').attr('src', "/img/products/"+value.prod_picture+".jpg");
+				$('#borr_prod_img').attr('src', "/img/products/" + value.prod_picture + ".jpg");
 
-					$('#borr_prod_name').html(value.prod_name);
-					$('#borr_prod_descr').html(value.prod_description);
-					$('#borr_prod_noter').html(value.prod_note);
-					$('#borr_arti_note').html(value.arti_note);
-				}
-			});
+				$('#borr_prod_name').html(value.prod_name);
+				$('#borr_prod_descr').html(value.prod_description);
+				$('#borr_prod_noter').html(value.prod_note);
+				$('#borr_arti_note').html(value.arti_note);
+			}
+		});
 
 
 		// Open modal popup
 		$("#borrModalAddUpdate").modal("show");
 	}
 	// suppression d'un rattrapage (remType=2)
-	else{
+	else {
 	}
 } //setRem
 
@@ -291,49 +291,49 @@ function addBorrow(idArticle) {
 
 
 	/* On vérifie que les données soient bien renseignées */
-	var strMsgErreur=formBorrowDataValidate();
+	var strMsgErreur = formBorrowDataValidate();
 
 	/* si il y a une erreur on ne fait rien .. on reste sur la popup */
-	if (!(strMsgErreur=="")) {
+	if (!(strMsgErreur == "")) {
 		return;
 	}
 
-		var oForm = $("#borrow_form");
-		
-		$.ajax({
-			type: "POST",
-			url: "/borrow/"+idArticle+"/add",
-			data: oForm.serialize(),
-			success: function(data){
-				
-				
+	var oForm = $("#borrow_form");
 
-				// on ferme la popup
-				$("#borrModalAddUpdate").modal("hide");
+	$.ajax({
+		type: "POST",
+		url: "/borrow/" + idArticle + "/add",
+		data: oForm.serialize(),
+		success: function (data) {
 
-				// on met à jour les icônes et le check du prêt ainsi que l'évènement click du bouton affichage de la popup d'emprunt
-				location.reload();
 
-				// on efface le contenu des  champs du popup
-				formBorrowDataReset();
 
-			},
-			error: function(){
-				Swal.fire({
-  					customClass: 'zoomIn',
-					titleText: "ERREUR",
-					type: "error",
-					html: "<div class='alert alert-danger'><strong>Survenue dans  addBorrow :</strong> module borrow.js</div>",		
-					showConfirmButton:	true,
-					confirmButtonColor: '#6c757d',
-					confirmButtonText: "Fermer"
-				  });
+			// on ferme la popup
+			$("#borrModalAddUpdate").modal("hide");
 
-				
-			}
-		});
+			// on met à jour les icônes et le check du prêt ainsi que l'évènement click du bouton affichage de la popup d'emprunt
+			location.reload();
 
-	
+			// on efface le contenu des  champs du popup
+			formBorrowDataReset();
+
+		},
+		error: function () {
+			Swal.fire({
+				customClass: 'zoomIn',
+				titleText: "ERREUR",
+				type: "error",
+				html: "<div class='alert alert-danger'><strong>Survenue dans  addBorrow :</strong> module borrow.js</div>",
+				showConfirmButton: true,
+				confirmButtonColor: '#6c757d',
+				confirmButtonText: "Fermer"
+			});
+
+
+		}
+	});
+
+
 } //addBorrow
 
 
@@ -346,64 +346,64 @@ function addBorrow(idArticle) {
  * @param {int} idBorrow  identifiant de l'emprunt
  * @param {int} idArticle identifiant de l'article
  */
- function backBorrow(idBorrow,idArticle) {
+function backBorrow(idBorrow, idArticle) {
 
 
-		/* On vérifie que les données soient bien renseignées */
-		strMsgErreur='';
-		//var strMsgErreur=formBorrowDataValidate();
+	/* On vérifie que les données soient bien renseignées */
+	strMsgErreur = '';
+	//var strMsgErreur=formBorrowDataValidate();
 
-		/* si il y a une erreur on ne fait rien .. on reste sur la popup */
-		if (!(strMsgErreur=="")) {
-			return;
+	/* si il y a une erreur on ne fait rien .. on reste sur la popup */
+	if (!(strMsgErreur == "")) {
+		return;
+	}
+
+	var oForm = $("#borrow_form");
+
+	$.ajax({
+		type: "POST",
+		url: "/borrow/" + idBorrow + "/back",
+		data: oForm.serialize(),
+		success: function (data) {
+
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000
+			});
+
+			Toast.fire({
+				type: 'success',
+				title: 'retour réussi'
+			});
+
+
+			// on ferme la popup
+			$("#borrModalAddUpdate").modal("hide");
+
+			// on met à jour les icônes et le check du prêt ainsi que l'évènement click du bouton affichage de la popup d'emprunt
+			location.reload();
+
+			// on efface le contenu des  champs du popup
+			formBorrowDataReset();
+
+		},
+
+		error: function () {
+			Swal.fire({
+				customClass: 'zoomIn',
+				titleText: "ERREUR",
+				type: "error",
+				html: "<div class='alert alert-danger'><strong>Survenue dans  backBorrow :</strong> module borrow.js</div>",
+				showConfirmButton: true,
+				confirmButtonColor: '#6c757d',
+				confirmButtonText: "Fermer"
+			});
+
+
 		}
-
-		var oForm = $("#borrow_form");
-		
-		$.ajax({
-			type: "POST",
-			url: "/borrow/"+idBorrow+"/back",
-			data: oForm.serialize(),
-			success: function(data){
-
-				const Toast = Swal.mixin({
-					toast: true,
-					position: 'top-end',
-					showConfirmButton: false,
-					timer: 3000
-				  });
-				  
-				  Toast.fire({
-					type: 'success',
-					title: 'retour réussi'
-				  });
-
-
-				// on ferme la popup
-				$("#borrModalAddUpdate").modal("hide");
-
-				// on met à jour les icônes et le check du prêt ainsi que l'évènement click du bouton affichage de la popup d'emprunt
-				location.reload();
-
-				// on efface le contenu des  champs du popup
-				formBorrowDataReset();
-
-			},
-
-			error: function(){
-				Swal.fire({
-  					customClass: 'zoomIn',
-					titleText: "ERREUR",
-					type: "error",
-					html: "<div class='alert alert-danger'><strong>Survenue dans  backBorrow :</strong> module borrow.js</div>",		
-					showConfirmButton:	true,
-					confirmButtonColor: '#6c757d',
-					confirmButtonText: "Fermer"
-				  });
-
-				
-			}
-		});
+	});
 
 } //backBorrow
 
@@ -422,12 +422,12 @@ function addBorrow(idArticle) {
  *
  * ---------------------------------------------------------
  */
-function delRem(idRemedial,idStudent){
+function delRem(idRemedial, idStudent) {
 
 	$.ajax({
 		type: "GET",
-		url: "/remedial/delete/"+ idRemedial,
-		success: function(){
+		url: "/remedial/delete/" + idRemedial,
+		success: function () {
 
 			// on met à jour les enregistrement dans la table
 			readStudentRemedialRecords(idStudent);
@@ -436,7 +436,7 @@ function delRem(idRemedial,idStudent){
 			$("#modal-delete").modal("hide");
 
 		},
-		error: function(){
+		error: function () {
 			bootbox.alert({
 				title: "<strong>ERREUR Supression</strong>",
 				message: '<div class="alert alert-warning"><strong>Survenue dans  delRem :</strong> module remedial.js</div>'
@@ -464,34 +464,45 @@ function formBorrowDataValidate() {
 	event.preventDefault();
 	var error_Msg = '';
 
-	
-	if($('#taken_borrow_visa').val() == '')
-	{
+
+	if ($('#taken_borrow_visa').val() == '') {
 		error_Msg = 'Le champ est obligatoire';
 		$('#error_taken_borrow_visa').text(error_Msg);
 		$('#taken_borrow_visa').css('border-color', '#cc0000');
 	}
-	else
-	{
-		
+	else {
+
 		$('#error_taken_borrow_visa').text('');
 		$('#taken_borrow_visa').css('border-color', '');
 	}
 
-	if ($("#taken_place").val()=="" ) {
+	if ($("#taken_place").val() == "") {
 
 		error_Msg = 'Le champ est obligatoire';
 		$('#error_taken_place').text(error_Msg);
 		$('#taken_place').css('border-color', '#cc0000');
 	}
-	else
-	{
-		
+	else {
+
 		$('#error_taken_place').text('');
 		$('#taken_place').css('border-color', '');
 	}
-	
-	
+
+
+	if ($("#taken_forwho_visa").val() == "") {
+
+		error_Msg = 'Le champ est obligatoire';
+		$('#error_taken_forwho_visa').text(error_Msg);
+		$('#taken_forwho_visa').css('border-color', '#cc0000');
+	}
+	else {
+
+		$('#error_forwho_visa').text('');
+		$('#error_taken_forwho_visa').css('border-color', '');
+	}
+
+
+
 
 	return error_Msg;
 
@@ -509,13 +520,13 @@ function formBorrowDataValidate() {
  *
  * ---------------------------------------------------------
  */
-function formBorrowDataReset(){
+function formBorrowDataReset() {
 
 	// on efface le contenu des  champs de la  popup
 	$("#taken_forwho_visa").val("");
 	$("#taken_place").val("");
 	$("#taken_reason").val("");
-	$("#take_date").val("");	
+	$("#take_date").val("");
 
 	// supprime les messages d'ereurs
 	$('#error_taken_forwho_visa').text('');
@@ -525,7 +536,7 @@ function formBorrowDataReset(){
 	$('#taken_place').css('border-color', '');
 
 
-	
+
 } //formBorrowDataReset
 
 
@@ -551,7 +562,7 @@ function formBorrowDataReset(){
  *
  * ---------------------------------------------------------
  */
-$(function() {
+$(function () {
 	$("#borrDtPicker").datepicker({
 		closeText: 'Fermer',
 		prevText: '',
