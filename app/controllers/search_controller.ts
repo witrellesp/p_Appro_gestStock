@@ -31,12 +31,64 @@ export default class SearchController {
       borrows: Number(activeBorrowsCount?.$extras.count)
     }
 
+    // préparer les données de recherche (mêmes que search_view)
+    const articles = await Article.query()
+      .preload('product')
+      .preload('borrow')
+      .withCount('borrow', (borrowQ) => {
+        borrowQ.whereNull('borr_returned_date')
+      })
+      .preload('chest', (query) => query.preload('room'))
+      .orderBy('label', 'asc')
+
+    const rows = articles.map(article => ({
+      id: article.id,
+      arti_label: article.label,
+      prod_name: article.product?.name ?? null,
+      prod_description: article.product?.description ?? null,
+      room_name: article.chest?.room?.name ?? null,
+      chest_name: article.chest?.name ?? null,
+      isBorrowed: Number(article.$extras.borrow_count ?? 0) > 0,
+    }))
+
     console.log('arrStat', arrStat)
 
     return view.render('search/index', {
       lstTypes,
       lstMenu,
-      arrStat
+      arrStat,
+      rows,           
     })
   }
+
+
+  async search_view({ view }: HttpContext) {
+    // Récupère tous les articles avec leurs relations
+    const articles = await Article.query()
+      .preload('product')
+      .preload('borrow')
+      .withCount('borrow', (borrowQ) => {
+        borrowQ.whereNull('borr_returned_date')
+      })
+      .preload('chest', (query) => query.preload('room'))
+      .orderBy('label', 'asc')
+
+    // Formate les données pour la vue
+    const rows = articles.map(article => ({
+      id: article.id,
+      arti_label: article.label,
+      prod_name: article.product?.name ?? null,
+      prod_description: article.product?.description ?? null,
+      room_name: article.chest?.room?.name ?? null,
+      chest_name: article.chest?.name ?? null,
+      isBorrowed: Number(article.$extras.borrow_count ?? 0) > 0,
+    }))
+
+    console.log('search_view rows count:', rows.length)
+    
+    return view.render('search/search_view', {
+      rows
+    })
+  }
+
 }
