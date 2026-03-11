@@ -1,4 +1,4 @@
-import type { HttpContext } from '@adonisjs/core/http'
+
 import { getMenu } from '#services/menu_service'
 import Category from '#models/category'
 import Kind from '#models/kind'

@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import type { NextFn } from '@adonisjs/core/types/http'
+
 import { getMenu } from '#services/menu_service'
 
 export default class ShareMenuMiddleware {

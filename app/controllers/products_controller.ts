@@ -1,9 +1,9 @@
 import Article from '#models/article'
-import Borrow from '#models/borrow'
+
 import Category from '#models/category'
-import Kind from '#models/kind'
+
 import Product from '#models/product'
-import { getMenu } from '#services/menu_service'
+
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class ProductsController {

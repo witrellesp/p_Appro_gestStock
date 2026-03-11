@@ -20,7 +20,7 @@ const ArticlesController = () => import ('#controllers/articles_controller')
 
 
 import db from '@adonisjs/lucid/services/db'
-import { AssertionError } from 'assert/strict'
+
 
 
 

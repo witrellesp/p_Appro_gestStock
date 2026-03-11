@@ -10,6 +10,9 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
+CREATE DATABASE IF NOT EXISTS `bd_stock` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `bd_stock`;
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -27,14 +30,18 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `t_articles` (
-  `id_arti` int(11) NOT NULL,
+  `id_arti` int(11) NOT NULL AUTO_INCREMENT,
   `arti_label` varchar(20) NOT NULL,
   `arti_purchase_date` date DEFAULT NULL,
   `arti_price` decimal(10,0) DEFAULT NULL,
   `arti_note` text,
   `fk_product` int(11) NOT NULL,
-  `fk_chest` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `fk_chest` int(11) NOT NULL,
+  PRIMARY KEY (`id_arti`),
+  UNIQUE KEY `label` (`arti_label`),
+  KEY `rel_article_chest` (`fk_chest`),
+  KEY `rel_article_product` (`fk_product`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=464;
 
 --
 -- Contenu de la table `t_articles`
@@ -504,7 +511,7 @@ INSERT INTO `t_articles` (`id_arti`, `arti_label`, `arti_purchase_date`, `arti_p
 --
 
 CREATE TABLE `t_borrows` (
-  `id_borr` int(11) NOT NULL,
+  `id_borr` int(11) NOT NULL AUTO_INCREMENT,
   `borr_owner` varchar(15) NOT NULL,
   `borr_forwho` varchar(20) NOT NULL,
   `borr_taken_date` date DEFAULT NULL,
@@ -513,8 +520,13 @@ CREATE TABLE `t_borrows` (
   `borr_reason` varchar(50) DEFAULT NULL,
   `borr_location` varchar(20) NOT NULL,
   `borr_note` text,
-  `fk_article` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `fk_article` int(11) NOT NULL,
+  PRIMARY KEY (`id_borr`),
+  KEY `rel_borrow_article` (`fk_article`),
+  KEY `borr_owner` (`borr_owner`),
+  KEY `borr_forwho` (`borr_forwho`),
+  KEY `borr_returned_visa` (`borr_returned_visa`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=29;
 
 --
 -- Contenu de la table `t_borrows`
@@ -556,10 +568,12 @@ INSERT INTO `t_borrows` (`id_borr`, `borr_owner`, `borr_forwho`, `borr_taken_dat
 --
 
 CREATE TABLE `t_categories` (
-  `id_cate` int(11) NOT NULL,
+  `id_cate` int(11) NOT NULL AUTO_INCREMENT,
   `cate_name` varchar(30) NOT NULL,
-  `fk_kind` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `fk_kind` int(11) NOT NULL,
+  PRIMARY KEY (`id_cate`),
+  KEY `rel_category_type` (`fk_kind`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=43;
 
 --
 -- Contenu de la table `t_categories`
@@ -616,10 +630,12 @@ INSERT INTO `t_categories` (`id_cate`, `cate_name`, `fk_kind`) VALUES
 --
 
 CREATE TABLE `t_chests` (
-  `id_ches` int(11) NOT NULL,
+  `id_ches` int(11) NOT NULL AUTO_INCREMENT,
   `ches_name` varchar(15) NOT NULL,
-  `fk_room` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `fk_room` int(11) NOT NULL,
+  PRIMARY KEY (`id_ches`),
+  KEY `rel_chest_room` (`fk_room`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
 
 --
 -- Contenu de la table `t_chests`
@@ -636,9 +652,10 @@ INSERT INTO `t_chests` (`id_ches`, `ches_name`, `fk_room`) VALUES
 --
 
 CREATE TABLE `t_kinds` (
-  `id_kind` int(11) NOT NULL,
-  `kind_name` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id_kind` int(11) NOT NULL AUTO_INCREMENT,
+  `kind_name` varchar(30) NOT NULL,
+  PRIMARY KEY (`id_kind`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=11;
 
 --
 -- Contenu de la table `t_kinds`
@@ -663,10 +680,11 @@ INSERT INTO `t_kinds` (`id_kind`, `kind_name`) VALUES
 --
 
 CREATE TABLE `t_makers` (
-  `id_make` int(11) NOT NULL,
+  `id_make` int(11) NOT NULL AUTO_INCREMENT,
   `make_name` varchar(30) NOT NULL,
-  `make_picture` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `make_picture` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id_make`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=89;
 
 --
 -- Contenu de la table `t_makers`
@@ -757,11 +775,13 @@ INSERT INTO `t_makers` (`id_make`, `make_name`, `make_picture`) VALUES
 --
 
 CREATE TABLE `t_notes` (
-  `id_note` int(11) NOT NULL,
+  `id_note` int(11) NOT NULL AUTO_INCREMENT,
   `date` date NOT NULL,
   `note_author` varchar(20) NOT NULL,
   `note_description` text NOT NULL,
-  `fk_borrow` int(11) DEFAULT NULL
+  `fk_borrow` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_note`),
+  KEY `rel_note_borrow` (`fk_borrow`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -771,14 +791,17 @@ CREATE TABLE `t_notes` (
 --
 
 CREATE TABLE `t_products` (
-  `id_prod` int(11) NOT NULL,
+  `id_prod` int(11) NOT NULL AUTO_INCREMENT,
   `prod_name` varchar(40) NOT NULL,
   `prod_description` text,
   `prod_picture` varchar(50) DEFAULT NULL,
   `prod_note` text,
   `fk_maker` int(11) DEFAULT NULL,
-  `fk_category` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `fk_category` int(11) NOT NULL,
+  PRIMARY KEY (`id_prod`),
+  KEY `fk_maker` (`fk_maker`),
+  KEY `fk_category` (`fk_category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=464;
 
 --
 -- Contenu de la table `t_products`
@@ -956,10 +979,10 @@ INSERT INTO `t_products` (`id_prod`, `prod_name`, `prod_description`, `prod_pict
 --
 
 CREATE TABLE `t_rooms` (
-  `id_room` int(11) NOT NULL,
-  `room_name` varchar(15) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+  `id_room` int(11) NOT NULL AUTO_INCREMENT,
+  `room_name` varchar(15) NOT NULL,
+  PRIMARY KEY (`id_room`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=20;
 --
 -- Contenu de la table `t_rooms`
 --
@@ -996,7 +1019,8 @@ CREATE TABLE `t_users` (
   `user_name` varchar(50) DEFAULT NULL,
   `user_firstname` varchar(50) DEFAULT NULL,
   `user_group` tinyint(1) NOT NULL DEFAULT '0',
-  `user_actif` tinyint(1) NOT NULL DEFAULT '1'
+  `user_actif` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1207,134 +1231,7 @@ DROP TABLE IF EXISTS `v_prod_details`;
 
 CREATE   VIEW `v_prod_details`  AS  select `t_products`.`id_prod` AS `id_prod`,`t_products`.`prod_name` AS `prod_name`,`t_products`.`prod_description` AS `prod_description`,`t_products`.`prod_picture` AS `prod_picture`,`t_products`.`prod_note` AS `prod_note`,`t_makers`.`make_name` AS `make_name`,`t_makers`.`make_picture` AS `make_picture`,`t_categories`.`cate_name` AS `cate_name`,`t_kinds`.`kind_name` AS `kind_name` from (((`t_products` join `t_makers` on((`t_products`.`fk_maker` = `t_makers`.`id_make`))) join `t_categories` on((`t_products`.`fk_category` = `t_categories`.`id_cate`))) join `t_kinds` on((`t_categories`.`fk_kind` = `t_kinds`.`id_kind`))) ;
 
---
--- Index pour les tables exportées
---
 
---
--- Index pour la table `t_articles`
---
-ALTER TABLE `t_articles`
-  ADD PRIMARY KEY (`id_arti`),
-  ADD UNIQUE KEY `label` (`arti_label`),
-  ADD KEY `rel_article_chest` (`fk_chest`),
-  ADD KEY `rel_article_product` (`fk_product`);
-
---
--- Index pour la table `t_borrows`
---
-ALTER TABLE `t_borrows`
-  ADD PRIMARY KEY (`id_borr`),
-  ADD KEY `rel_borrow_article` (`fk_article`),
-  ADD KEY `borr_owner` (`borr_owner`),
-  ADD KEY `borr_forwho` (`borr_forwho`),
-  ADD KEY `borr_returned_visa` (`borr_returned_visa`);
-
---
--- Index pour la table `t_categories`
---
-ALTER TABLE `t_categories`
-  ADD PRIMARY KEY (`id_cate`),
-  ADD KEY `rel_category_type` (`fk_kind`);
-
---
--- Index pour la table `t_chests`
---
-ALTER TABLE `t_chests`
-  ADD PRIMARY KEY (`id_ches`),
-  ADD KEY `rel_chest_room` (`fk_room`);
-
---
--- Index pour la table `t_kinds`
---
-ALTER TABLE `t_kinds`
-  ADD PRIMARY KEY (`id_kind`);
-
---
--- Index pour la table `t_makers`
---
-ALTER TABLE `t_makers`
-  ADD PRIMARY KEY (`id_make`);
-
---
--- Index pour la table `t_notes`
---
-ALTER TABLE `t_notes`
-  ADD PRIMARY KEY (`id_note`),
-  ADD KEY `rel_note_borrow` (`fk_borrow`);
-
---
--- Index pour la table `t_products`
---
-ALTER TABLE `t_products`
-  ADD PRIMARY KEY (`id_prod`),
-  ADD KEY `fk_maker` (`fk_maker`),
-  ADD KEY `fk_category` (`fk_category`);
-
---
--- Index pour la table `t_rooms`
---
-ALTER TABLE `t_rooms`
-  ADD PRIMARY KEY (`id_room`);
-
---
--- Index pour la table `t_users`
---
-ALTER TABLE `t_users`
-  ADD PRIMARY KEY (`id_user`);
-
---
--- AUTO_INCREMENT pour les tables exportées
---
-
---
--- AUTO_INCREMENT pour la table `t_articles`
---
-ALTER TABLE `t_articles`
-  MODIFY `id_arti` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=464;
---
--- AUTO_INCREMENT pour la table `t_borrows`
---
-ALTER TABLE `t_borrows`
-  MODIFY `id_borr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
---
--- AUTO_INCREMENT pour la table `t_categories`
---
-ALTER TABLE `t_categories`
-  MODIFY `id_cate` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
---
--- AUTO_INCREMENT pour la table `t_chests`
---
-ALTER TABLE `t_chests`
-  MODIFY `id_ches` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT pour la table `t_kinds`
---
-ALTER TABLE `t_kinds`
-  MODIFY `id_kind` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
---
--- AUTO_INCREMENT pour la table `t_makers`
---
-ALTER TABLE `t_makers`
-  MODIFY `id_make` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
---
--- AUTO_INCREMENT pour la table `t_notes`
---
-ALTER TABLE `t_notes`
-  MODIFY `id_note` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `t_products`
---
-ALTER TABLE `t_products`
-  MODIFY `id_prod` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=464;
---
--- AUTO_INCREMENT pour la table `t_rooms`
---
-ALTER TABLE `t_rooms`
-  MODIFY `id_room` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
---
--- Contraintes pour les tables exportées
---
 
 --
 -- Contraintes pour la table `t_articles`
