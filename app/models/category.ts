@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon'
+
 import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import type { HasMany } from '@adonisjs/lucid/types/relations'

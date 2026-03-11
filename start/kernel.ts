@@ -12,7 +12,7 @@ import router from '@adonisjs/core/services/router'
 import server from '@adonisjs/core/services/server'
 
 import env from '#start/env'
-import shieldMiddleware from "@adonisjs/shield/shield_middleware"
+
 /**
  * The error handler is used to convert an exception
  * to an HTTP response.

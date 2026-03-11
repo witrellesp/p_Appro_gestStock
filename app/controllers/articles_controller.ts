@@ -1,10 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Article from '#models/article'
-import Product from '#models/product'
-import Chest from '#models/chest'
+
 import Borrow from '#models/borrow'
-import Note from '#models/note'
-import { DateTime } from 'luxon'
+
 
 export default class ArticlesController {
 
