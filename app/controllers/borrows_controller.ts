@@ -63,12 +63,16 @@ export default class BorrowsController {
       const chest = a?.chest
       const r = chest?.room
 
+            const isBorrowed = a ? a.isBorrowed() : false
+
       return {
         kind_name: k.name ?? '',
         prod_name: p.name ?? '',
         cate_name: c.name ?? '',
         arti_label: a.label ?? '',
         arti_id: a.id ?? '',
+        arti_isBorrowed: isBorrowed,
+        
 
         user_name: owner.name ?? '',
         user_firstname: owner.firstname ?? '',
@@ -115,6 +119,10 @@ export default class BorrowsController {
       const owner = b?.ownerUser
       const chest = a?.chest
       const r = chest?.room
+      
+      const isBorrowed = a ? a.isBorrowed() : false
+
+ 
 
       return {
         kind_name: k.name ?? '',
@@ -122,6 +130,9 @@ export default class BorrowsController {
         cate_name: c.name ?? '',
         arti_label: a.label ?? '',
         arti_id: a.id ?? '',
+
+        arti_isBorrowed: isBorrowed,
+   
 
         user_name: owner.name ?? '',
         user_firstname: owner.firstname ?? '',
@@ -218,9 +229,9 @@ export default class BorrowsController {
 
     const arrError = { msgErr: '' }
 
-    
+     const borrow = await Borrow.find(idBorrow)
     try {
-      const borrow = await Borrow.find(idBorrow)
+     
       
 
       if (!borrow) {
@@ -236,7 +247,10 @@ export default class BorrowsController {
       return response.json(arrError)
 
     } catch (error) {
-      console.error(error)
+      
+      console.log('BORROW ', borrow)
+      console.log('BORROW BACK ', idBorrow)
+      console.error('BORROW BACK ERROR', error)
       return response.status(500).json({ msgErr: "Erreur lors du retour" })
     }
 
