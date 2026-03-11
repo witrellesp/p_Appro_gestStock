@@ -10,6 +10,9 @@
 
   <div class="card-body p-5">
     <form method="POST" action="/article/{{ article.id }}/submit_edit?_method=PUT">
+    <input type="hidden" name="returnTo" value="{{ returnTo }}" />
+    <input type="hidden" name="categoryId" value="{{ article.product.category.id }}" />
+
       {{ csrfField() }}
 
       <div class="row">

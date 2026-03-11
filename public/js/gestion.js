@@ -1223,7 +1223,34 @@ $.ajax({
 
 }; //getArticles
 
+/**
+ * Retourne une liste des articles pour la fenêtre recherche
+ */
+var  getArticlesSearch=function(){
+	"use strict";
+	console.log('getArticlesSearch called');
+	$('#load_search-data-all-articles').html(null);
+	$('.overlay_search-all-article').css('display','block');
 
+	$.ajax({
+		type : "GET",
+		datatype : "html",
+		url : "/articles/search_view",
+	}).done(function(data){
+			console.log('search_view response received, rows count:', data.length);
+			$('.overlay_search-all-article').css('display','none');
+			$('#load_search-data-all-articles').html(data);
+			
+			datatablesSearchRefresh('#datatable-all-search_articles');
+			var table = $('#datatable-all-search_articles').DataTable();
+			console.log('DataTable initialized');
+			
+	}).fail(function(jqXHR, textStatus, errorThrown){
+			console.error('AJAX error:', textStatus, errorThrown);
+			$('.overlay_search-all-article').css('display','none');
+	});
+
+}; //getArticlesSearch
 
 var setFilterSearch=function(){
 	"use strict";

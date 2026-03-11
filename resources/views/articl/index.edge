@@ -28,8 +28,8 @@
 			- le retour d'un emprunt
 			- la modification d'un emprunt
 ------------------------------------------------------------------------------------  -->
-@if(appState.isAuthenticated) 
-  @include('partials/borrow_modal')
+@if(appState.isAuthenticated)
+@include('partials/borrow_modal')
 @endif
 
 
@@ -51,7 +51,16 @@
 
 @each(p in products)
 <div id="accordion" class="card-accordion">
+
+          @if(flashMessages.has('errorArticle'))
+    <div class="alert alert-danger">
+      {{ flashMessages.get('errorArticle') }}
+    </div>
+    @endif
   <div class="card">
+
+
+
 
     <div class="card-header bg-grey-light text-seondary pointer-cursor" style="height: 6rem;" data-toggle="collapse"
       data-target="#collapse_{{p.id}}">
@@ -97,8 +106,8 @@
         <div class="row">
 
 
-        @each(article in articles.filter(a => a.fkProduct === p.id))
-          
+          @each(article in articles.filter(a => a.fkProduct === p.id))
+
 
 
           <!-- begin shadow-card -->
@@ -167,9 +176,7 @@
 
 
                 <span id="borrModOpen"
-                  
                   onclick="setModBorrow('{{appState.user.id}}','{{ article.isBorrowed ? 1 : 0}}','{{article.borrow?.id ?? ''}}','{{article.id}}')"
-                  
                   data-toggle="modal"><a href="#" class="text-grey-darker">
                     <!-- TODO on vérifie si l'article est emprnté   <?php if ($article['isBorrow']){ ?> -->
 
@@ -197,13 +204,31 @@
 
                 @if(appState?.isAdministrator)
 
-                <span><a href="#" class="text-grey-darker">
+
+
+
+                <span><a href="article/{{article.id}}/edit?returnTo=products" class="text-grey-darker">
+                  <input type="hidden" name="categoryId" value="{{ article.product.category.id }}" />
+
                     <i class="fas fa-edit  width-30 height-30 f-s-20 text-center " style="line-height: 30px"></i>
                 </span></a>
 
-                <span><a href="#" class="text-grey-darker">
-                    <i class="fas fa-trash-alt  width-30 height-30 f-s-20 text-center " style="line-height: 30px"></i>
-                </span></a>
+
+
+                <form method="POST" action="/article/{{ article.id }}/delete_article?_method=DELETE"
+                  style="display:inline;">
+                  {{ csrfField() }}
+
+                  <input type="hidden" name="categoryId" value="{{ article.product.category.id }}" />
+
+
+                  <button type="submit" style="border:none; background:none; padding:0"
+                    onclick="return confirm('Êtes-vous sûr ?')" class="text-grey-darker">
+
+                    <i class="fas fa-trash-alt width-30 height-30 f-s-20 text-center" style="line-height:30px"></i>
+
+                  </button>
+                </form>
 
                 @endif
 
