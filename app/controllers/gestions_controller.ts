@@ -7,6 +7,8 @@ import Product from '#models/product'
 import Room from '#models/room'
 import Chest from '#models/chest'
 import User from '#models/user'
+import Article from '#models/article'
+import { DateTime } from 'luxon'
 
 export default class GestionsController {
   async index({ view }: HttpContext) {
@@ -16,6 +18,35 @@ export default class GestionsController {
     const rooms = await Room.query().orderBy('name', 'asc')
     const chests = await Chest.query().orderBy('name', 'asc')
     const users = await User.query().orderBy('name', 'asc')
+    const articles = await Article.query()
+      .preload('product')
+      .preload('borrow')
+      .withCount('borrow', (borrowQ) => {
+        borrowQ.whereNull('borr_returned_date')
+      })
+      .preload('chest', (query) => query.preload('room'))
+      .orderBy('label', 'asc')
+
+  
+
+    const rows = articles.map(article => {
+      return {
+        id: article.id,
+        arti_label: article.label,
+        prod_picture: article.product?.picture ?? null,
+        prod_name: article.product?.name ?? null,
+        prod_description: article.product?.description ?? null,
+        prod_note: article.product?.note ?? null,
+        arti_note: article.note ?? null,
+        room_name: article.chest?.room?.name ?? null,
+        chest_name: article.chest?.name ?? null,
+        isBorrowed: Number(article.$extras.borrow_count ?? 0) > 0,
+        borrower: article.borrow?.at(-1)?.toJSON() ?? null
+      }
+    })
+
+
+    const products = await Product.query().orderBy('name', 'asc')
 
     return view.render('gestion/gest_tables', {
       kinds,
@@ -24,12 +55,16 @@ export default class GestionsController {
       rooms,
       chests,
       users,
+      rows,
+      products,
       nbKinds: kinds.length,
       nbCats: categories.length,
       nbMakers: makers.length,
       nbRooms: rooms.length,
       nbChests: chests.length,
       nbUsers: users.length,
+      nbArticles: articles.length,
+      nbProducts: products.length,
     })
   }
 
@@ -395,6 +430,38 @@ export default class GestionsController {
     return response.redirect().toPath('/gest_tables')
   }
 
+
+  /**
+   * Recupère la liste des rooms, utilisée par les formulaires de gestion pour afficher les options de salle 
+   */
+  async getRooms({ response }: HttpContext) {
+    const rooms = await Room.query().orderBy('name', 'asc')
+    return response.json(rooms)
+  }
+
+
+  /**
+   * Recupère la liste des armoires appartenant à une salle spécifique, utilisée par les formulaires de gestion pour afficher les options d'armoire en fonction de la salle sélectionnée
+   */
+  async getRoomChests({ params, response }: HttpContext) {
+    const roomId = params.id
+    if (!roomId) {
+      return response.badRequest({ message: 'room id is required' })
+    }
+
+    const chests = await Chest.query().where('fkRoom', roomId).orderBy('name', 'asc')
+    return response.json(chests)
+  }
+
+
+  /**
+   *  Recupère la liste des produits, utilisée par les formulaires de gestion pour afficher les options de produits lors de la création ou de l'édition d'un article
+   */
+  async apiProducts({ response }: HttpContext) {
+    const products = await Product.query().orderBy('name', 'asc')
+    return response.json(products)
+  }
+  
   /************************ CHESTS (ARMOIRES) *************************/
   /**
    * Affiche une liste de CHESTS
@@ -611,4 +678,167 @@ export default class GestionsController {
     session.flash('successUser', `User "${user?.name}" supprimé.`)
     return response.redirect().toPath('/gest_tables')
   }
+
+
+
+  /************************ ARTICLES  *************************/
+  /**
+   * Affiche une liste d'articles
+   */
+
+  async article_view({ view }: HttpContext) {
+    const articles = await Article.query()
+      .preload('product')
+      .preload('borrow')
+      .withCount('borrow', (borrowQ) => {
+        borrowQ.whereNull('borr_returned_date')
+      })
+      .preload('chest', (query) => query.preload('room'))
+      .orderBy('label', 'asc')
+
+  
+
+    const rows = articles.map(article => {
+      return {
+        id: article.id,
+        arti_label: article.label,
+        prod_picture: article.product?.picture ?? null,
+        prod_name: article.product?.name ?? null,
+        prod_description: article.product?.description ?? null,
+        prod_note: article.product?.note ?? null,
+        arti_note: article.note ?? null,
+        room_name: article.chest?.room?.name ?? null,
+        chest_name: article.chest?.name ?? null,
+        isBorrowed: Number(article.$extras.borrow_count ?? 0) > 0,
+        borrower: article.borrow?.at(-1)?.toJSON() ?? null
+      }
+    })
+
+
+
+    console.log('row', rows[34])
+    return view.render('gestion/articles/articles_view', {
+      rows,
+    })
+  }
+
+  /**
+   * Affiche un form pour ajouter un article
+   */
+  async article_add({ view }: HttpContext) {
+    const products = await Product.query().orderBy('name', 'asc')
+    const rooms = await Room.query().orderBy('name', 'asc')
+
+    return view.render('gestion/articles/article_create', {
+      products,
+      rooms,
+    })
+  }
+
+  /**
+   * Handle le form pour submit la création d'un article
+   */
+  async submit_add_article({ request, response }: HttpContext) {
+    const label = (request.input('label') || '').trim()
+
+    const note = (request.input('note') || '').trim()
+    const fkProduct = request.input('fkProduct')
+    const fkChest = request.input('fkChest')
+
+    if (!label) {
+      return response.badRequest('label est requis')
+    }
+    if (!fkProduct) return response.badRequest('Product is required')
+    if (!fkChest) return response.badRequest('Chest is required')
+
+    await Article.create({
+      label,
+      note,
+      fkProduct,
+      fkChest
+    })
+
+    return response.redirect().toPath('/gest_tables')
+  }
+
+  /**
+   * Edit individual d'un article
+   */
+  async article_edit({ params, view }: HttpContext) {
+    const article = await Article.query()
+      .where('id', params.id)
+      .preload('product')
+      .preload('chest', (query) => query.preload('room'))
+      .first()
+
+    if (!article) {
+      return view.render('pages/errors/not_found')
+    }
+
+    const products = await Product.query().orderBy('name', 'asc')
+    const rooms = await Room.query().orderBy('name', 'asc')
+    const chests = await Chest.query().orderBy('name', 'asc')
+
+    return view.render('gestion/articles/article_edit', {
+      article,
+      products,
+      rooms,
+      chests,
+    })
+  }
+
+  /**
+   * Handle qui submit l'édition d'un article
+   */
+  async submit_edit_article({ params, request, response }: HttpContext) {
+    const data = request.only([
+      'label',
+      'purchase_date',
+      'price',
+      'note',
+      'fkProduct',
+      'fkChest'
+    ])
+
+    const article = await Article.findOrFail(params.id)
+    if (!article) {
+      return response.badRequest('Invalid ID')
+    }
+
+    article.merge({
+      label: data.label,
+      note: data.note || article.note,
+      fkProduct: data.fkProduct,
+      fkChest: data.fkChest
+    })
+
+    await article.save()
+
+    return response.redirect().toPath('/gest_tables')
+  }
+
+  /**
+   * Delete un article
+   */
+  async destroy_article({ params, response, session }: HttpContext) {
+    const id = params.id
+    const article = await Article.find(id)
+
+    const hasBorrows = await db.from('t_borrows').where('fk_article', id).whereNull('borr_returned_date').first()
+
+    if (!id) {
+      return response.badRequest('Invalid ID')
+    }
+
+    if (hasBorrows) {
+      session.flash('errorArticle', 'Impossible de supprimer: cet article a des emprunts actifs')
+      return response.redirect().toPath('/gest_tables')
+    }
+
+    await article?.delete()
+
+    session.flash('successArticle', `Article "${article?.label}" supprimé.`)
+    return response.redirect().toPath('/gest_tables')
+  }
+
 }

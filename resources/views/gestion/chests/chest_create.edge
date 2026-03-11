@@ -1,34 +1,47 @@
 @component('components/layouts/app')
 @slot('main')
-<h1> Ajout d'une armoire de stockage </h1>
 
-
-@if(flashMessages.get('error'))
-<p style="color:red">
-    {{ flashMessages.get('error') }}
-</p>
-@endif
-
-<form method="POST" action="/chest/submit_add">
-    {{ csrfField() }}
-
-
-    {{--il faut chosisir une salle auquelle l'armoire apartiendra--}}
-    <select name="fk_room" required>
-        <option value="">-- Choisisez une salle --</option>
-        @each(r in rooms)
-        <option value="{{ r.id }}">{{ r.name }}</option>
-        @endeach
-    </select>
-
-    <div>
-        <label for="ches_name">Nom: </label>
-        <input id="ches_name" type="text" name="ches_name" />
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">Ajouter une armoire</h4>
+  </div>
+  <div class="card-body p-5">
+    @if(flashMessages.get('error'))
+    <div class="alert alert-danger">
+      {{ flashMessages.get('error') }}
     </div>
+    @endif
 
-    <button type="submit">Enregistrer</button>
-</form>
-
+    <form method="POST" action="/chest/submit_add">
+      {{ csrfField() }}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="fk_room" class="form-label">Salle *</label>
+            <select id="fk_room" name="fk_room" class="form-select" required>
+              <option value="">-- Choisisez une salle --</option>
+              @each(r in rooms)
+              <option value="{{ r.id }}">{{ r.name }}</option>
+              @endeach
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="ches_name" class="form-label">Nom *</label>
+            <input id="ches_name" type="text" name="ches_name" class="form-control" required />
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save me-2"></i>Enregistrer
+        </button>
+        <a href="/gest_tables" class="btn btn-secondary">
+          <i class="fas fa-times me-2"></i>Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
 
 @endslot
 @endcomponent

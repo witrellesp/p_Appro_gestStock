@@ -367,10 +367,83 @@
             </section>  
           </div>
         </div>
+
+        
+
+
+
+
+
+
+
+
       </div>
     </div>
   </div>
 
+
+
+
+</div>
+
+<div class="row">
+
+  <div class="col-12">
+
+    <div id="accor_articles" class="card-accordion">
+      <div class="card">
+        <div class="card-header bg-grey-light text-seondary pointer-cursor">
+          <div class="media-body">
+            <div class="row">
+
+              <div class="col-10" data-toggle="collapse" data-target="#collapse_articles">
+                <h4 class="media-heading">Articles</h4>
+                <i class="text-muted">Nombre :
+
+                  <span id="nbArticles" class="text-success">{{ nbArticles }}</span>
+                </i>
+
+              </div>
+
+              <div class="col-12t">
+                
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div id="collapse_articles" class="collapse show" data-parent="#accor_articles">
+				
+          <div class="card-body p-5">	
+
+            <!-- section: Table , liste des articles-->
+            <section class="section-list-all-articles">
+              <div class="container-fluid">							
+
+                <div class="cardbox">
+                  <div class="cardbox-heading">
+                    <div class="table-responsive bootgrid">
+                      
+                      <div class="overlay-all-articles" style="display:none; font-size:36px; margin:5px; text-align:center;"><i class="fas fa-sync-alt fa-spin"></i></div>
+                      <!-- insertion de la liste des articles voir méthode article_view  gestion.js-->
+                      @include('gestion/articles/articles_view')
+                      
+                  
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </section>  
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 
 </div>
 
@@ -381,3 +454,5 @@
 
 @endslot
 @endcomponent
+
+

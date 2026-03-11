@@ -1,0 +1,103 @@
+@component('components/layouts/app')
+@slot('main')
+
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">
+      </i>Ajouter un nouvel article
+    </h4>
+  </div>
+
+  <div class="card-body p-5">
+    <form method="POST" action="/article/submit_add">
+      {{ csrfField() }}
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="label" class="form-label">Label *</label>
+            <input type="text" class="form-control" id="label" name="label" required>
+            <small class="form-text text-muted">Identifiant unique de l'article</small>
+          </div>
+
+      
+          <div class="mb-3">
+            <label for="note" class="form-label">Note</label>
+            <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="fkProduct" class="form-label">Produit *</label>
+            <select class="form-select" id="fkProduct" name="fkProduct" required>
+              <option value="">-- Sélectionner un produit --</option>
+              @each(product in products)
+              <option value="{{ product.id }}">{{ product.name }}</option>
+              @endeach
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="room" class="form-label">Salle *</label>
+            <select class="form-select" id="room" name="room" required onchange="loadChests()">
+              <option value="">-- Sélectionner une salle --</option>
+              @each(room in rooms)
+              <option value="{{ room.id }}">{{ room.name }}</option>
+              @endeach
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="fkChest" class="form-label">Armoire *</label>
+            <select class="form-select" id="fkChest" name="fkChest" required>
+              <option value="">-- Sélectionner une armoire --</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save me-2"></i>Créer l'article
+            </button>
+            <a href="/gest_tables" class="btn btn-secondary">
+              <i class="fas fa-times me-2"></i>Annuler
+            </a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function loadChests() {
+  const roomId = document.getElementById('room').value;
+  const chestSelect = document.getElementById('fkChest');
+
+  if (!roomId) {
+    chestSelect.innerHTML = '<option value="">-- Sélectionner une armoire --</option>';
+    return;
+  }
+
+  chestSelect.innerHTML = '<option value="">Chargement...</option>';
+
+  fetch(`/api/rooms/${roomId}/chests`)
+    .then(response => response.json())
+    .then(chests => {
+      chestSelect.innerHTML = '<option value="">-- Sélectionner une armoire --</option>';
+      chests.forEach(chest => {
+        const option = document.createElement('option');
+        option.value = chest.id;
+        option.textContent = chest.name;
+        chestSelect.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error('Erreur:', error);
+      chestSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+    });
+}
+</script>
+
+@endslot
+@endcomponent

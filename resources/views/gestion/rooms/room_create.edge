@@ -1,25 +1,37 @@
 @component('components/layouts/app')
 @slot('main')
-<h1>Créer une salle de stockage</h1>
 
-
-@if(flashMessages.get('error'))
-<p style="color:red">
-    {{ flashMessages.get('error') }}
-</p>
-@endif
-
-<form method="POST" action="/room/submit_add">
-    {{ csrfField() }}
-
-    <div>
-        <label for="room_name">Nom: </label>
-        <input id="room_name" type="text" name="room_name" />
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">Créer une salle</h4>
+  </div>
+  <div class="card-body p-5">
+    @if(flashMessages.get('error'))
+    <div class="alert alert-danger">
+      {{ flashMessages.get('error') }}
     </div>
-
-    <button type="submit">Enregistrer</button>
-</form>
-
+    @endif
+    <form method="POST" action="/room/submit_add">
+      {{ csrfField() }}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="room_name" class="form-label">Nom *</label>
+            <input id="room_name" type="text" name="room_name" class="form-control" required />
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save me-2"></i>Enregistrer
+        </button>
+        <a href="/gest_tables" class="btn btn-secondary">
+          <i class="fas fa-times me-2"></i>Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
 
 @endslot
 @endcomponent

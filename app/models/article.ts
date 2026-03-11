@@ -12,7 +12,7 @@ export default class Article extends BaseModel {
   declare id: number
 
   @column({ columnName: 'arti_label' })
-  declare label: number
+  declare label: string
 
   @column({ columnName: 'arti_purchase_date' })
   declare purchase_date: DateTime

@@ -218,6 +218,7 @@ export default class BorrowsController {
 
     const arrError = { msgErr: '' }
 
+    
     try {
       const borrow = await Borrow.find(idBorrow)
       
