@@ -1,34 +1,50 @@
 @component('components/layouts/app')
 @slot('main')
-<h1>Créer une catégorie</h1>
 
-
-@if(flashMessages.get('error'))
-<p style="color:red">
-    {{ flashMessages.get('error') }}
-</p>
-@endif
-
-<form method="POST" action="/category/submit_add">
-    {{ csrfField() }}
-
-
-    {{--il faut chosisir un genre auquel la categorie apartiendra--}}
-    <select name="fk_kind" required>
-        <option value="">-- Choisisez un genre --</option>
-        @each(k in kinds)
-        <option value="{{ k.id }}">{{ k.name }}</option>
-        @endeach
-    </select>
-
-    <div>
-        <label for="cate_name">Nom: </label>
-        <input id="cate_name" type="text" name="cate_name" />
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">Créer une catégorie</h4>
+  </div>
+  <div class="card-body p-5">
+    @if(flashMessages.get('error'))
+    <div class="alert alert-danger">
+      {{ flashMessages.get('error') }}
     </div>
+    @endif
 
-    <button type="submit">Enregistrer</button>
-</form>
+    <form method="POST" action="/category/submit_add">
+      {{ csrfField() }}
 
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="fk_kind" class="form-label">Genre *</label>
+            <select id="fk_kind" name="fk_kind" class="form-select" required>
+              <option value="">-- Choisisez un genre --</option>
+              @each(k in kinds)
+              <option value="{{ k.id }}">{{ k.name }}</option>
+              @endeach
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="cate_name" class="form-label">Nom *</label>
+            <input id="cate_name" type="text" name="cate_name" class="form-control" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save me-2"></i>Enregistrer
+        </button>
+        <a href="/gest_tables" class="btn btn-secondary">
+          <i class="fas fa-times me-2"></i>Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
 
 @endslot
 @endcomponent

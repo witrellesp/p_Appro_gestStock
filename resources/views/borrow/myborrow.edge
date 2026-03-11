@@ -1,3 +1,8 @@
+<!-- ----------------------------------------------------------------------------------------
+		Insertion du code gérant la modal PoPup pour la vue détail d'un article
+------------------------------------------------------------------------------------  -->
+<div id="modViewArticle"></div>
+
 <table class="table table-striped bootgrid-table" id="datatable-all-borrows" aria-busy="false">
 	<thead>
 		<tr>
@@ -28,7 +33,7 @@
 
 
 			<td class="text-left">
-				<a href="#" data-toggle="modal" onclick="setArticleView(<?= $borrow->id_arti() ?>)">
+				<a href="#" data-toggle="modal" onclick="setArticleView({{ r.arti_id }})">
 					<h5 class="widget-list-title text-orange-darker">{{ r.arti_label }}</h5>
 				</a>
 			</td>

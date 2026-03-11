@@ -1,0 +1,70 @@
+<table class="table table-striped bootgrid-table table-hover" id="datatable-all-articles" aria-busy="false">
+
+  <div class="col-2 text-md-right">
+    <span><a href="/article/add" class="text-green-darker"><i class="fas fa-plus-square fa-3x text-center p-t-5"
+          style="line-height: 30px"></i></a></span>
+  </div>
+
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>Produit</th>
+      <th>Salle / Armoire</th>
+      <th>Statut</th>
+      <th data-column-id="commands" data-sortable="false"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    {{-- Message d'erreur si suppression impossible --}}
+    @if(flashMessages.has('errorArticle'))
+    <div class="alert alert-danger">
+      {{ flashMessages.get('errorArticle') }}
+    </div>
+    @endif
+
+    {{-- Message de succès --}}
+    @if(flashMessages.has('successArticle'))
+    <div class="alert alert-success">
+      {{ flashMessages.get('successArticle') }}
+    </div>
+    @endif
+
+    {{-- Affichage des articles --}}
+    @each(article in rows)
+    <tr>
+      <td>{{ article.arti_label }}</td>
+      <td>
+        {{ article.prod_name }}
+      </td>
+      <td>
+        @if(article.chest_name && article.room_name)
+          {{ article.room_name}} / {{ article.chest_name }}
+        @else
+          <span class="text-muted">N/A</span>
+        @endif
+      </td>
+      <td>
+        @if(article.isBorrowed)
+          <span class="badge badge-danger">Emprunté</span>
+        @else
+          <span class="badge badge-success">Disponible</span>
+        @endif
+      </td>
+      <td class="text-md-right p-5">
+        <a href="/article/{{article.id}}/edit">
+          <button type="button" class="fas fa-edit f-s-15 text-center p-r-5" style="border:none"></button>
+        </a>
+
+        {{-- le _method nous permet d'envoyer une requete DELETE --}}
+        <form method="POST" action="/article/{{ article.id }}/delete_article?_method=DELETE" style="display:inline;">
+          {{ csrfField() }}
+
+          <button type="submit" class="fas fa-trash-alt f-s-15 text-center" style="border:none" onclick="return confirm('Êtes-vous sûr ?')"></button>
+        </form>
+      </td>
+    </tr>
+    @endeach
+  </tbody>
+</table>

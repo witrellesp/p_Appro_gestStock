@@ -1,25 +1,37 @@
 @component('components/layouts/app')
 @slot('main')
-<h1>Créer une marque</h1>
 
-
-@if(flashMessages.get('error'))
-<p style="color:red">
-    {{ flashMessages.get('error') }}
-</p>
-@endif
-
-<form method="POST" action="/maker/submit_add">
-    {{ csrfField() }}
-
-    <div>
-        <label for="make_name">Nom: </label>
-        <input id="make_name" type="text" name="make_name" />
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">Créer une marque</h4>
+  </div>
+  <div class="card-body p-5">
+    @if(flashMessages.get('error'))
+    <div class="alert alert-danger">
+      {{ flashMessages.get('error') }}
     </div>
-
-    <button type="submit">Enregistrer</button>
-</form>
-
+    @endif
+    <form method="POST" action="/maker/submit_add">
+      {{ csrfField() }}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="make_name" class="form-label">Nom *</label>
+            <input id="make_name" type="text" name="make_name" class="form-control" required />
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save me-2"></i>Enregistrer
+        </button>
+        <a href="/gest_tables" class="btn btn-secondary">
+          <i class="fas fa-times me-2"></i>Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
 
 @endslot
 @endcomponent

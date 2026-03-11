@@ -1,20 +1,32 @@
 @component('components/layouts/app')
 @slot('main')
 
-
-    <h1>Edit {{make.name}}</h1>
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">Modifier une marque</h4>
+  </div>
+  <div class="card-body p-5">
     <form method="POST" action="/maker/{{ make.id }}/submit_edit?_method=PUT">
-    {{ csrfField() }}
-    
-
-
-      <div>
-        <label for="make_name">Nom: </label>
-        <input id="make_name" type="text" name="make_name" value="{{make.name}}"/>
+      {{ csrfField() }}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="make_name" class="form-label">Nom *</label>
+            <input id="make_name" type="text" name="make_name" class="form-control" value="{{make.name}}" required />
+          </div>
+        </div>
       </div>
-
-      <button type="submit">Enregistrer</button>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save me-2"></i>Enregistrer
+        </button>
+        <a href="/gest_tables" class="btn btn-secondary">
+          <i class="fas fa-times me-2"></i>Annuler
+        </a>
+      </div>
     </form>
+  </div>
+</div>
 
 @endslot
 @endcomponent

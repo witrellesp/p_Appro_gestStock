@@ -1,0 +1,144 @@
+<!-- Popup modal pour la vue détail d'un article -->
+<!-- Modal pour afficher les détails complets d'un article -->
+<div id="artiModalView" class="modal fade" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-gradient-info">
+        <h1 class="page-header m-b-0">
+          {{ article.label }}
+          <small class="text-green">
+            @if(isBorrowed)
+              <i class="fas fa-lg fa-fw m-r-10 fa-times text-red fa-2x"></i>
+              <i class="text-muted"> en prêt</i>
+            @else
+              <i class="fas fa-lg fa-fw m-r-10 fa-check text-green fa-2x"></i>
+              <i class="text-muted"> en stock</i>
+            @endif
+          </small>
+        </h1>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="cardbox">
+          <div class="cardbox-body">
+            <li class="media">
+              <a href="javascript:;" class="pull-left">
+                <img src="/img/products/{{ article.product?.picture ?? 'default' }}.jpg" alt="" class="media-object width-80">
+              </a>
+              <div class="media-body pull-right">
+                <a href="javascript:;">
+                  <h4 class="media-heading">{{ article.product?.name ?? 'N/A' }}</h4>
+                </a>
+                <p class="m-b-5">{{ article.product?.description ?? 'N/A' }}</p>
+                <p>
+                  <small>
+                    <i class="text-muted">{{ article.product?.note ?? '' }}</i>
+                  </small>
+                </p>
+                <p>
+                  <small>
+                    <i class="text-orange">{{ article.note ?? '' }}</i>
+                  </small>
+                </p>
+              </div>
+            </li>
+          </div>
+
+          <div class="cardbox-body p-t-10">
+            <div class="row text-center">
+              <div class="col">
+                <h4 class="mt-0 mb-0 text-bold">
+                  {{ article.chest?.room?.name ?? 'N/A' }} / {{ article.chest?.name ?? 'N/A' }}
+                </h4>
+                <small>Entreposage</small>
+              </div>
+              <div class="col">
+
+              </div>
+              <div class="col">
+                
+              </div>
+            </div>
+          </div>
+
+          <!-- Article en prêt - seulement si emprunté -->
+          @if(article.isBorrowed)
+           {{--  @php
+              const activeBorrow = borrows.find(b => !b.returned_date)
+            @endphp --}}
+            @if(activeBorrow)
+            <div class="cardbox-body m-t-20">
+              <p class='f-s-14'>
+                <strong>Actuellement en prêt par <i class="text-orange">{{ activeBorrow.owner }}</i></strong>
+              </p>
+              <li class="media">
+                <a href="javascript:;" class="pull-left">
+                  <img src="/img/users/{{ activeBorrow.owner }}.jpg" alt="" class="media-object width-80">
+                </a>
+                <div class="media-body pull-right">
+                  <a href="javascript:;">
+                    <h4 class="media-heading">{{ activeBorrow.owner }}</h4>
+                  </a>
+                  <p class="m-b-0">pour : <i class="text-orange">{{ activeBorrow.forwho }}</i></p>
+                  <p class="m-b-0">
+                    Date du prêt : <i class="text-orange">
+                      {{ activeBorrow.taken_date.toFormat('dd-MM-yyyy') }}
+                    </i>
+                  </p>
+                  <p class="m-b-0">Raison : <i class="text-orange">{{ activeBorrow.reason }}</i></p>
+                  <p class="m-b-0">Emplacement : <i class="text-orange">{{ activeBorrow.location }}</i></p>
+                </div>
+              </li>
+            </div>
+            @endif
+          @endif
+
+          <!-- Résumé des remarques sur les prêts - seulement s'il y en a -->
+          @if(borrowsNotes.length > 0)
+          <div class="cardbox-body p-t-10">
+            <p class='f-s-14 m-b-5'><strong>Remarques sur les prêts</strong></p>
+            <div class="chats bg-grey my-custom-scrollbar my-custom-scrollbar-primary" data-scrollbar="true" data-height="300px">
+              @each(borrowNote in borrowsNotes)
+{{--                 @php
+                  const isLeft = loop.index % 2 === 0
+                @endphp --}}
+                <div class="{{ isLeft ? 'left' : 'right' }}">
+                  <span class="date-time text-orange-darker">
+                    du {{ borrowNote.taken_date.toFormat('dd-MM-yyyy') }}
+                    au {{ borrowNote.returned_date?.toFormat('dd-MM-yyyy') ?? 'N/A' }}
+                  </span>
+                  <a href="#" class="name">{{ borrowNote.returned_visa ?? borrowNote.owner }}</a>
+                  <a href="#" class="image">
+                    <img alt="" src="/img/users/{{ borrowNote.returned_visa ?? borrowNote.owner }}.jpg" />
+                  </a>
+                  <div class="message" style="min-height: 40px;">
+                    <p class='m-b-5'>
+                      <b><i>{{ borrowNote.owner }}</i></b> pour <b><i>{{ borrowNote.forwho }}</i></b>
+                      --> <b><i>{{ borrowNote.reason }}</i></b>
+                    </p>
+                    {{ borrowNote.note ?? '' }}
+                  </div>
+                </div>
+              @endeach
+            </div>
+          </div>
+          @endif
+        </div>
+      </div>
+
+      <div class="modal-footer m-t-10">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      /* reload slimscroll - le javascript ne se reload pas dans une modal */
+      if (typeof App !== 'undefined' && App.initComponent) {
+        App.initComponent();
+      }
+    });
+  </script>
+</div>

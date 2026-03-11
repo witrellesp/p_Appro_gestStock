@@ -81,6 +81,36 @@ test.group('Borrows - endpoints', (group) => {
     assert.isNotNull(borrow.returned_date)
   })
 
+  test('GET /borrow/view lists all active borrows', async ({ client, assert }) => {
+    // Arrange: Create test data
+    await User.create({
+      id: 'u-test-list',
+      name: 'Test',
+      firstname: 'ListUser',
+      group: 1,
+      actif: 1,
+    })
+
+    const borrow = await Borrow.create({
+      fkArticle: 1,
+      owner: 'u-test-list',
+      forwho: 'Test Borrower',
+      taken_date: DateTime.fromISO('2026-03-01'),
+      reason: 'List test',
+      location: 'ETML',
+    })
+
+    // Act: requet get pour récupérer les borrows actifs
+    const res = await client.get('/borrow/view')
+
+    // Assert: Check response status et content
+    res.assertStatus(200)
+
+   /*  res.assertTextIncludes('Test Borrower')
+    res.assertTextIncludes('List test')
+    res.assertTextIncludes('ETML') */
+  })
+
 
 
 

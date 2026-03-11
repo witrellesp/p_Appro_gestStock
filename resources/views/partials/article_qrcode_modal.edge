@@ -1,0 +1,202 @@
+<!-- Modal QR Code pour les articles -->
+<div id="articleQrCodeModal" class="modal fade" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header border-bottom">
+        <div class="d-flex align-items-center w-100">
+          <h5 class="modal-title flex-grow-1" id="qrModalArticleLabel"></h5>
+          <div class="d-flex align-items-center">
+            <i id="qrModalArticleIcon" class="fas fa-check-circle text-success me-2"></i>
+            <small id="qrModalArticleStatusText" class="text-muted"></small>
+          </div>
+          <button type="button" class="btn-close ms-3" data-dismiss="modal"></button>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+
+        <!-- Información del artículo -->
+        <div class="row mb-4 pb-3 border-bottom">
+          <div class="col-auto">
+            <h6 class="mb-1"><strong id="qrModalProductName"></strong></h6>
+            <p class="text-muted small mb-1" id="qrModalProductDesc"></p>
+            <p class="text-muted small mb-0" id="qrModalLocation"></p>
+          </div>
+          <div class="col">
+            <small class="text-muted d-block" id="qrModalProductNote"></small>
+            <small class="text-warning d-block" id="qrModalArticleNote"></small>
+          </div>
+        </div>
+
+        <!-- QR Code y Controles -->
+        <div class="row">
+          <!-- QR Code -->
+          <div class="col-md-6 text-center mb-4">
+            <h6 class="mb-3 text-muted">Code QR</h6>
+            <div id="artQrCode" class="border p-3 d-inline-block">
+              <!-- QR Code será generado aquí -->
+            </div>
+          </div>
+
+          <!-- Controles -->
+          <div class="col-md-6">
+            <h6 class="mb-3 text-muted">Paramètres</h6>
+
+            <!-- Label -->
+            <div class="mb-2">
+              <small class="text-muted d-block mb-1">Label</small>
+              <input id="qrLabel" type="text" class="form-control form-control-sm" placeholder="Texte du label">
+            </div>
+
+            <!-- Style -->
+            <div class="mb-2">
+              <small class="text-muted d-block mb-1">Style</small>
+              <select id="qrMode" class="form-select form-select-sm">
+                <option value="0">Aucun</option>
+                <option value="1">Bande</option>
+                <option value="2" selected>Boîte</option>
+              </select>
+            </div>
+
+            <!-- Couleur del label -->
+            <div class="mb-2">
+              <small class="text-muted d-block mb-1">Couleur</small>
+              <input id="qrFontcolor" type="color" class="form-control form-control-color" value="#ff9818" style="height: 30px;">
+            </div>
+
+            <hr class="my-3">
+
+            <!-- Taille -->
+            <div class="mb-2">
+              <small class="text-muted d-block">Size: <span id="msizeValue">12%</span></small>
+              <input id="msize" type="range" class="form-range" value="12" min="8" max="24" step="1">
+            </div>
+
+            <!-- Pos X -->
+            <div class="mb-2">
+              <small class="text-muted d-block">Pos X: 50%</small>
+              <input id="mposx" type="range" class="form-range" value="50" min="0" max="100" step="1">
+            </div>
+
+            <!-- Pos Y -->
+            <div class="mb-3">
+              <small class="text-muted d-block">Pos Y: 0%</small>
+              <input id="mposy" type="range" class="form-range" value="0" min="0" max="100" step="1">
+            </div>
+
+            <hr class="my-3">
+
+            <!-- Taille QR -->
+            <div class="mb-2">
+              <small class="text-muted d-block">Taille: <span id="qrSizeValue">175px</span></small>
+              <input id="qrSize" type="range" class="form-range" value="175" min="100" max="300" step="25">
+            </div>
+
+            <!-- Colores QR -->
+            <div class="row">
+              <div class="col-6">
+                <small class="text-muted d-block mb-1">Arrière plan</small>
+                <input id="qrBackground" type="color" class="form-control form-control-color" value="#ffffff" style="height: 30px;">
+              </div>
+              <div class="col-6">
+                <small class="text-muted d-block mb-1">Premier plan</small>
+                <input id="qrFill" type="color" class="form-control form-control-color" value="#333333" style="height: 30px;">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QR Code caché -->
+        <textarea hidden id="qrcodeValue" rows="5"></textarea>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-top d-print-none">
+        <button type="button" class="btn btn-primary btn-sm" onclick="printBloc('artQrCode')">Print</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Fermer</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+{{-- 
+<style>
+/* Styles personnalisés pour le modal QR Code */
+#articleQrCodeModal .bg-gradient-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+#articleQrCodeModal .shadow-lg {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+#articleQrCodeModal .card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+#articleQrCodeModal .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+#articleQrCodeModal .form-range::-webkit-slider-thumb {
+  background: #3052eb;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#articleQrCodeModal .form-range::-moz-range-thumb {
+  background: #3052eb;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#articleQrCodeModal .badge {
+  font-size: 0.7em;
+}
+
+#articleQrCodeModal .btn-outline-primary:hover,
+#articleQrCodeModal .btn-outline-info:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#articleQrCodeModal .modal-dialog {
+  max-width: 900px;
+}
+
+/* Animation d'entrée */
+#articleQrCodeModal .modal-content {
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(0, -50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #articleQrCodeModal .modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+  }
+
+  #articleQrCodeModal .row.g-4 > div {
+    margin-bottom: 1rem;
+  }
+}
+</style>
+ --}}

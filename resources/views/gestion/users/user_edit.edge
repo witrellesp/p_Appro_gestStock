@@ -1,30 +1,40 @@
 @component('components/layouts/app')
 @slot('main')
 
-
-<h1>Edit {{user.name}}</h1>
-<form method="POST" action="/user/{{ user.id }}/submit_edit?_method=PUT">
-  {{ csrfField() }}
-
-
-      <div>
-        <label for="user_id">ID: </label>
-        <input id="user_id" type="text" name="user_id" value="{{user.id}}"/>
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title">Modifier l'utilisateur</h4>
+  </div>
+  <div class="card-body p-5">
+    <form method="POST" action="/user/{{ user.id }}/submit_edit?_method=PUT">
+      {{ csrfField() }}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="user_id" class="form-label">ID *</label>
+            <input id="user_id" type="text" name="user_id" class="form-control" value="{{user.id}}" required />
+          </div>
+          <div class="mb-3">
+            <label for="user_firstname" class="form-label">Prénom *</label>
+            <input id="user_firstname" type="text" name="user_firstname" class="form-control" value="{{user.firstname}}" required />
+          </div>
+          <div class="mb-3">
+            <label for="user_name" class="form-label">Nom *</label>
+            <input id="user_name" type="text" name="user_name" class="form-control" value="{{user.name}}" required />
+          </div>
+        </div>
       </div>
-
-
-  <div>
-    <label for="user_firstname">Prénom: </label>
-    <input id="user_firstname" type="text" name="user_firstname" value="{{user.firstname}}" />
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save me-2"></i>Enregistrer
+        </button>
+        <a href="/gest_tables" class="btn btn-secondary">
+          <i class="fas fa-times me-2"></i>Annuler
+        </a>
+      </div>
+    </form>
   </div>
-
-  <div>
-    <label for="user_name">Nom: </label>
-    <input id="user_name" type="text" name="user_name" value="{{user.name}}" />
-  </div>
-
-  <button type="submit">Enregistrer</button>
-</form>
+</div>
 
 @endslot
 @endcomponent

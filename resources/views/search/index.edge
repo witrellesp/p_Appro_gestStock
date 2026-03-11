@@ -1,0 +1,47 @@
+@component('components/layouts/app')
+@slot('main')
+<!-- ----------------------------------------------------------------------------------------
+		Insertion du code gérant la modal PoPup pour la vue détail d'un article
+------------------------------------------------------------------------------------  -->
+<div id="modViewArticle"></div>
+
+<h1 class="page-header">NOTRE ASSORTIMENT<small> <strong>{{ arrStat.products }}</strong> produits pour <strong>{{ arrStat.articles }}</strong> articles dont <strong>{{ arrStat.borrows }}</strong> empruntés</small></h1>
+
+<div id="HeadSearch">
+  <em>Taper pour rechercher..</em>
+  <input oninput="setFilterSearch()" class="form-control form-control-lg m-t-5" id="search_article" name="pattern" type="text" autocomplete="off" aria-controls="datatable-all-search_articles">
+</div>
+
+<!-- section: Table , liste des  genres .. matériels-->
+<section class="section_search-list-all-article">
+  <div class="container-fluid">
+    <div class="cardbox">
+      <div class="cardbox-heading">
+        <div class="table-responsive bootgrid">
+          <div class="overlay_search-all-article" style="display:none; font-size:36px; margin:5px; text-align:center;"><i class="fas fa-sync-alt fa-spin"></i></div>
+          <!-- insertion de la liste des genres voir méthode getKind  gestion.js-->
+          <div id="load_search-data-all-articles"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  $(document).ready(function() {
+    getArticlesSearch();
+
+    $('a.toggle-vis').on( 'click', function (e) {
+      var table = $('#datatable-all-search_articles').DataTable();
+      e.preventDefault();
+
+      /* Get the column API object */
+      var column = table.column( $(this).attr('data-column') );
+
+      /* Toggle the visibility */
+      column.visible( ! column.visible() );
+    });
+  });
+</script>
+@endslot
+@endcomponent

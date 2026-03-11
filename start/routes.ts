@@ -15,7 +15,7 @@ const ConnectionsController = () => import ('#controllers/connections_controller
 const BorrowsController = () => import ('#controllers/borrows_controller')
 const ProductsController = () => import ('#controllers/products_controller')
 const MenusController = () => import ('#controllers/menus_controller')
-
+const SearchController = () => import ('#controllers/search_controller')
 
 import db from '@adonisjs/lucid/services/db'
 import { AssertionError } from 'assert/strict'
@@ -33,11 +33,9 @@ router.get('/test-edge', async ({ view }) => view.render('test'))
 
 
 //router.on('/').render('pages/home')
-router.get('/', async ({ view }) => {return view.render('pages/home',{
-  page: {
-      title: 'Home'
-  }
-})})
+router.get('/',[SearchController,'index'])
+
+
 
 //Login 
 router.post('/login',[ConnectionsController,'login'])
@@ -65,6 +63,14 @@ router.post('/borrow/:id/back',[BorrowsController,'back'])
 
 /* Articles */
 router.get('/articles/:id/get',[ArticlesController,'get'])
+router.get('/articles/:id/qrcode',[ArticlesController,'getQrCodeData'])
+router.get('/articles/:id/view',[ArticlesController,'view'])
+
+// API endpoints used by management forms
+router.get('/api/rooms', [GestionsController, 'getRooms'])
+router.get('/api/rooms/:id/chests', [GestionsController, 'getRoomChests'])
+router.get('/api/products', [GestionsController, 'apiProducts'])
+
 
 
 
@@ -188,4 +194,26 @@ router.post('/user/submit_add',[GestionsController, 'submit_add_user'])
 // Route pour delete un room
 router.delete('/user/:id/delete_user',[GestionsController, 'destroy_user'])
 
+
+/* ARTICLES */
+// Liste de articles
+router.get('/article/view',[GestionsController,'article_view'])
+
+// Form pour la modification d'un article
+router.get('/article/:id/edit', [GestionsController, 'article_edit'])
+// Route qui submit la modification d'un article
+router.put('/article/:id/submit_edit',[GestionsController, 'submit_edit_article'])
+
+// Route qui retourne un form pour la creation d'un article
+router.get('/article/add',[GestionsController, 'article_add'])
+// Route qui retourne un form pour la creation d'un article
+router.post('/article/submit_add',[GestionsController, 'submit_add_article'])
+
+// Route pour delete un article
+router.delete('/article/:id/delete_article',[GestionsController, 'destroy_article'])
+
+
 }).middleware([middleware.auth(),middleware.admin()])
+
+/* SEARCH */
+router.get('/search', [SearchController, 'index'])
