@@ -1223,40 +1223,12 @@ $.ajax({
 
 }; //getArticles
 
-/**
- * Retourne une liste des articles pour la fenêtre recherche
- */
-var  getArticlesSearch=function(){
-	"use strict";
-	$('#load_search-data-all-articles').html(null);
-	$('.overlay_search-all-article').css('display','block');
 
-	$.ajax({
-		type : "GET",
-		datatype : "html",
-		url : "/articles/search_view",
-	}).done(function(data){
-			$('.overlay_search-all-article').css('display','none');
-			$('#load_search-data-all-articles').html(data);
-			
-			datatablesSearchRefresh('#datatable-all-search_articles');
-			var table = $('#datatable-all-search_articles').DataTable();
-			
-			//table.dataTable({bFilter: false, bInfo: false});
-
-		});
-
-}; //getArticlesSearch
 
 var setFilterSearch=function(){
 	"use strict";
-	
 	var table = $('#datatable-all-search_articles').DataTable();
- 
-	// #myInput is a <input type="text"> element
-	$('#search_article').on( 'keyup', function () {
-		table.search( this.value ).draw();
-	});
+	table.search( $('#search_article').val() ).draw();
 };
 
 

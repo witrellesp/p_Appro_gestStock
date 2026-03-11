@@ -1,0 +1,39 @@
+<table class="table table-striped bootgrid-table table-hover" id="datatable-all-search_articles" aria-busy="false">
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>Produit</th>
+      <th>Description</th>
+      <th>Salle / Armoire</th>
+      <th>Statut</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @each(article in rows)
+    <tr>
+      <td>{{ article.arti_label }}</td>
+      <td>
+        {{ article.prod_name ?? 'N/A' }}
+      </td>
+      <td>
+        {{ article.prod_description ?? 'N/A' }}
+      </td>
+      <td>
+        @if(article.chest_name && article.room_name)
+          {{ article.room_name}} / {{ article.chest_name }}
+        @else
+          <span class="text-muted">N/A</span>
+        @endif
+      </td>
+      <td>
+        @if(article.isBorrowed)
+          <span class="badge badge-danger">Emprunté</span>
+        @else
+          <span class="badge badge-success">Disponible</span>
+        @endif
+      </td>
+    </tr>
+    @endeach
+  </tbody>
+</table>

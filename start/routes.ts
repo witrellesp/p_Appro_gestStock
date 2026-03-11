@@ -16,10 +16,12 @@ const BorrowsController = () => import ('#controllers/borrows_controller')
 const ProductsController = () => import ('#controllers/products_controller')
 const MenusController = () => import ('#controllers/menus_controller')
 const SearchController = () => import ('#controllers/search_controller')
+const ArticlesController = () => import ('#controllers/articles_controller')
+
 
 import db from '@adonisjs/lucid/services/db'
 import { AssertionError } from 'assert/strict'
-import ArticlesController from '#controllers/articles_controller'
+
 
 
 // TEST DB CONECTION
@@ -32,8 +34,12 @@ router.get('/db-test', async () => {
 router.get('/test-edge', async ({ view }) => view.render('test'))
 
 
-//router.on('/').render('pages/home')
+// PAGE D'ACCUEIL
 router.get('/',[SearchController,'index'])
+
+/* SEARCH */
+router.get('/search', [SearchController, 'index'])
+router.get('/articles/search_view', [SearchController, 'search_view'])
 
 
 
@@ -215,5 +221,3 @@ router.delete('/article/:id/delete_article',[GestionsController, 'destroy_articl
 
 }).middleware([middleware.auth(),middleware.admin()])
 
-/* SEARCH */
-router.get('/search', [SearchController, 'index'])
