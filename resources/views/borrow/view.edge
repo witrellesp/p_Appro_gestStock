@@ -1,3 +1,21 @@
+<!-- ----------------------------------------------------------------------------------------
+	il faut être connecté pour emprunter, restituer ou modifier un article
+		Insertion du code gérant la modal PoPup pour :
+			- l'ajout d'un emprunt
+			- le retour d'un emprunt
+			- la modification d'un emprunt
+------------------------------------------------------------------------------------  -->
+@if(appState.isAuthenticated) 
+  @include('partials/borrow_modal')
+@endif
+
+
+<!-- ----------------------------------------------------------------------------------------
+		Insertion du code gérant la modal PoPup pour la vue détail d'un article
+------------------------------------------------------------------------------------  -->
+<div id="modViewArticle"></div>
+
+
 <table class="table table-striped bootgrid-table" id="datatable-all-borrows" aria-busy="false">
 	<thead>
 		<tr>
@@ -31,7 +49,7 @@
 					
 
 					<td class="text-left">
-					<a href="#"  data-toggle="modal" onclick="setArticleView(<?= $borrow->id_arti() ?>)">
+					<a href="#"  data-toggle="modal" onclick="setArticleView({{ r.arti_id }})">
 						<h5 class="widget-list-title text-orange-darker">{{ r.arti_label }}</h5>
 					</a>
 				</td>
@@ -39,19 +57,17 @@
 				<td class="text-left">{{r.user_firstname}} {{r.user_name}}</td>
 				<td class="text-left">{{r.borr_forwho}}</td>
 				<td class="text-left">{{r.borr_location}}</td>
-				<td class="text-left">{{r.room_name}}//{{r.ches_name}}</td>
+				<td class="text-left">{{r.room_name}} / {{r.ches_name}}</td>
 				<td class="text-left">{{r.borr_taken_date}}</td>
-				<td class="text-md-right">
-
-
-					{{-- TODO: finir le retour d'emprunts depuis la vue de tous les emprunts --}}
-										<button type="button" class="btn btn-xs btn-info" 
-							onclick="setModBorrow('<?php echo $user->getAttribute('user')->id_user(); ?>',1,'<?php echo $borrow->id_borr() ?>','<?php echo $borrow->id_arti(); ?>')">
-							<i class="fas fa-sign-in-alt fa-rotate-90 text-center "></i>
-					</button>	
 				
-			
-				</td>
+{{-- 				<td class="text-md-right">
+                <span id="borrModOpen" onclick="setModBorrow('{{appState.user.id}}','{{ r.arti_isBorrowed ? 1 : 0}}','{{r.borr_id}}','{{r.arti_id}}')">
+								<button  class="btn btn-xs btn-info">
+						<i class="fas fa-sign-in-alt fa-rotate-90 text-center"></i>
+					</button>
+				</span>
+				</td> --}}
+
 			</tr>
 
 		@endif

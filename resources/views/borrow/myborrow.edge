@@ -1,4 +1,16 @@
 <!-- ----------------------------------------------------------------------------------------
+	il faut être connecté pour emprunter, restituer ou modifier un article
+		Insertion du code gérant la modal PoPup pour :
+			- l'ajout d'un emprunt
+			- le retour d'un emprunt
+			- la modification d'un emprunt
+------------------------------------------------------------------------------------  -->
+@if(appState.isAuthenticated) 
+  @include('partials/borrow_modal')
+@endif
+
+
+<!-- ----------------------------------------------------------------------------------------
 		Insertion du code gérant la modal PoPup pour la vue détail d'un article
 ------------------------------------------------------------------------------------  -->
 <div id="modViewArticle"></div>
@@ -41,19 +53,29 @@
 			<td class="text-left">{{r.user_firstname}} {{r.user_name}}</td>
 			<td class="text-left">{{r.borr_forwho}}</td>
 			<td class="text-left">{{r.borr_location}}</td>
-			<td class="text-left">{{r.room_name}}//{{r.ches_name}}</td>
+			<td class="text-left">{{r.room_name}} / {{r.ches_name}}</td>
 			<td class="text-left">{{r.borr_taken_date}}</td>
 			<td class="text-md-right">
+				
 
 				
-				<form method="POST" action="/borrow/{{r.borr_id}}/back">
+                <span id="borrModOpen" onclick="setModBorrow('{{appState.user.id}}','{{ r.arti_isBorrowed ? 1 : 0}}','{{r.borr_id}}','{{r.arti_id}}')">
+								<button  class="btn btn-xs btn-info">
+						<i class="fas fa-sign-in-alt fa-rotate-90 text-center"></i>
+					</button>
+				</span>
+
+
+
+{{-- 				<form method="POST" action="/borrow/{{r.borr_id}}/back" >
+				
 					{{ csrfField() }}
 
 					<button type="submit" class="btn btn-xs btn-info">
 						<i class="fas fa-sign-in-alt fa-rotate-90 text-center"></i>
 					</button>
 
-				</form>
+				</form> --}}
 
 			</td>
 		</tr>
