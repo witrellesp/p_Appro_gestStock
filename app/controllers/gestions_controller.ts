@@ -27,9 +27,7 @@ export default class GestionsController {
       .preload('chest', (query) => query.preload('room'))
       .orderBy('label', 'asc')
 
-  
-
-    const rows = articles.map(article => {
+    const rows = articles.map((article) => {
       return {
         id: article.id,
         arti_label: article.label,
@@ -41,10 +39,9 @@ export default class GestionsController {
         room_name: article.chest?.room?.name ?? null,
         chest_name: article.chest?.name ?? null,
         isBorrowed: Number(article.$extras.borrow_count ?? 0) > 0,
-        borrower: article.borrow?.at(-1)?.toJSON() ?? null
+        borrower: article.borrow?.at(-1)?.toJSON() ?? null,
       }
     })
-
 
     const products = await Product.query().orderBy('name', 'asc')
 
@@ -204,7 +201,6 @@ export default class GestionsController {
   async category_edit({ params, view }: HttpContext) {
     const cate = await Category.find(params.id)
 
-
     return view.render('gestion/categories/category_edit', {
       cate,
     })
@@ -290,7 +286,6 @@ export default class GestionsController {
    */
   async maker_edit({ params, view }: HttpContext) {
     const make = await Maker.find(params.id)
-
 
     return view.render('gestion/makers/maker_edit', {
       make,
@@ -430,15 +425,13 @@ export default class GestionsController {
     return response.redirect().toPath('/gest_tables')
   }
 
-
   /**
-   * Recupère la liste des rooms, utilisée par les formulaires de gestion pour afficher les options de salle 
+   * Recupère la liste des rooms, utilisée par les formulaires de gestion pour afficher les options de salle
    */
   async getRooms({ response }: HttpContext) {
     const rooms = await Room.query().orderBy('name', 'asc')
     return response.json(rooms)
   }
-
 
   /**
    * Recupère la liste des armoires appartenant à une salle spécifique, utilisée par les formulaires de gestion pour afficher les options d'armoire en fonction de la salle sélectionnée
@@ -453,7 +446,6 @@ export default class GestionsController {
     return response.json(chests)
   }
 
-
   /**
    *  Recupère la liste des produits, utilisée par les formulaires de gestion pour afficher les options de produits lors de la création ou de l'édition d'un article
    */
@@ -461,7 +453,7 @@ export default class GestionsController {
     const products = await Product.query().orderBy('name', 'asc')
     return response.json(products)
   }
-  
+
   /************************ CHESTS (ARMOIRES) *************************/
   /**
    * Affiche une liste de CHESTS
@@ -511,7 +503,6 @@ export default class GestionsController {
    */
   async chest_edit({ params, view }: HttpContext) {
     const ches = await Chest.find(params.id)
-
 
     return view.render('gestion/chests/chest_edit', {
       ches,
@@ -614,7 +605,6 @@ export default class GestionsController {
   async user_edit({ params, view }: HttpContext) {
     const user = await User.find(params.id)
 
-
     return view.render('gestion/users/user_edit', {
       user,
     })
@@ -679,8 +669,6 @@ export default class GestionsController {
     return response.redirect().toPath('/gest_tables')
   }
 
-
-
   /************************ ARTICLES  *************************/
   /**
    * Affiche une liste d'articles
@@ -696,9 +684,7 @@ export default class GestionsController {
       .preload('chest', (query) => query.preload('room'))
       .orderBy('label', 'asc')
 
-  
-
-    const rows = articles.map(article => {
+    const rows = articles.map((article) => {
       return {
         id: article.id,
         arti_label: article.label,
@@ -710,11 +696,9 @@ export default class GestionsController {
         room_name: article.chest?.room?.name ?? null,
         chest_name: article.chest?.name ?? null,
         isBorrowed: Number(article.$extras.borrow_count ?? 0) > 0,
-        borrower: article.borrow?.at(-1)?.toJSON() ?? null
+        borrower: article.borrow?.at(-1)?.toJSON() ?? null,
       }
     })
-
-
 
     console.log('row', rows[34])
     return view.render('gestion/articles/articles_view', {
@@ -755,7 +739,7 @@ export default class GestionsController {
       label,
       note,
       fkProduct,
-      fkChest
+      fkChest,
     })
 
     return response.redirect().toPath('/gest_tables')
@@ -764,10 +748,14 @@ export default class GestionsController {
   /**
    * Edit individual d'un article
    */
-  async article_edit({ params, view }: HttpContext) {
+  async article_edit({ params, request, view }: HttpContext) {
     const article = await Article.query()
       .where('id', params.id)
-      .preload('product')
+      .preload('product', (productQ) => {
+        productQ.preload('category', (categoryQ) => {
+          categoryQ.preload('kind')
+        })
+      })
       .preload('chest', (query) => query.preload('room'))
       .first()
 
@@ -779,11 +767,14 @@ export default class GestionsController {
     const rooms = await Room.query().orderBy('name', 'asc')
     const chests = await Chest.query().orderBy('name', 'asc')
 
+    const returnTo = request.input('returnTo')
+
     return view.render('gestion/articles/article_edit', {
       article,
       products,
       rooms,
       chests,
+      returnTo,
     })
   }
 
@@ -791,54 +782,74 @@ export default class GestionsController {
    * Handle qui submit l'édition d'un article
    */
   async submit_edit_article({ params, request, response }: HttpContext) {
-    const data = request.only([
-      'label',
-      'purchase_date',
-      'price',
-      'note',
-      'fkProduct',
-      'fkChest'
-    ])
+    const data = request.only(['label', 'purchase_date', 'price', 'note', 'fkProduct', 'fkChest'])
 
     const article = await Article.findOrFail(params.id)
+
+    const categoryId = request.input('categoryId')
+
     if (!article) {
       return response.badRequest('Invalid ID')
     }
 
-    article.merge({
-      label: data.label,
-      note: data.note || article.note,
-      fkProduct: data.fkProduct,
-      fkChest: data.fkChest
-    })
+    const returnTo = request.input('returnTo')
 
-    await article.save()
+    try {
+      article.merge({
+        label: data.label,
+        note: data.note || article.note,
+        fkProduct: data.fkProduct,
+        fkChest: data.fkChest,
+      })
 
-    return response.redirect().toPath('/gest_tables')
+      if (categoryId && returnTo === 'products') {
+        await article.save()
+        return response.redirect().toPath(`/products?categoryId=${categoryId}`)
+      } else {
+        await article.save()
+        return response.redirect().toPath('/gest_tables')
+      }
+    } catch (error) {}
   }
 
   /**
    * Delete un article
    */
-  async destroy_article({ params, response, session }: HttpContext) {
+  async destroy_article({ params, request, response, session }: HttpContext) {
     const id = params.id
     const article = await Article.find(id)
 
-    const hasBorrows = await db.from('t_borrows').where('fk_article', id).whereNull('borr_returned_date').first()
+    const hasBorrows = await db.from('t_borrows').where('fk_article', id).first()
+
+    const categoryId = request.input('categoryId')
+
+    console.log('params', params)
 
     if (!id) {
       return response.badRequest('Invalid ID')
     }
 
     if (hasBorrows) {
-      session.flash('errorArticle', 'Impossible de supprimer: cet article a des emprunts actifs')
+      session.flash(
+        'errorArticle',
+        "Impossible de supprimer: cet article a un historique d'emprunts."
+      )
       return response.redirect().toPath('/gest_tables')
     }
 
-    await article?.delete()
+    try {
+      await article?.delete()
 
-    session.flash('successArticle', `Article "${article?.label}" supprimé.`)
-    return response.redirect().toPath('/gest_tables')
+      if (categoryId) {
+        return response.redirect().toPath(`/products?categoryId=${categoryId}`)
+      } else {
+        session.flash('successArticle', `Article "${article?.label}" supprimé.`)
+        return response.redirect().toPath('/gest_tables')
+      }
+      
+    } catch (error) {
+      console.error(error)
+      session.flash('errorArticle', "Une erreur est survenue lors de la suppression de l'article.")
+    }
   }
-
 }
